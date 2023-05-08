@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.project.ProgettoSad.model.Game;
 
+
 public interface GameService {
 	
 	Game createGame(Game game);
