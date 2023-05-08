@@ -15,12 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.ProgettoSad.model.Game;
 import com.project.ProgettoSad.service.GameService;
 
+//Controller che coordina tutti i metodi disponibili tramite http per l'oggetto Game
 @RestController
 public class GameController {
 	
+	//richiama i metodi indicati per l'interfaccia GameService
 	@Autowired
 	private GameService gameService;
 	
+	//effettua il mapping per la richiesta http GET e va ad indicare una keyword per il suo utilizzo
 	@GetMapping("/games")
 	public ResponseEntity <List <Game>> getAllGames(){
 		return ResponseEntity.ok().body(gameService.getAllGames());

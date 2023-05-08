@@ -1,20 +1,25 @@
 package com.project.ProgettoSad.model;
 
+//formato date supportato da Java
 import java.time.LocalDateTime;
-import jakarta.validation.constraints.NotBlank;
 
+//annotation che permette l'implementazione del vincolo Not Blank
+import jakarta.validation.constraints.NotBlank;
+//annotation che indica che il valore è un identificativo
 import org.springframework.data.annotation.Id;
+//annotation che identifica un oggetto che deve essere presente nel database
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document (collection = "GameDB")
 public class Game {
+	
 	@Id
-	private long id;
+	private long id; //identificativo univoco del documento
 	@NotBlank
-	private LocalDateTime dataInizio ;
+	private LocalDateTime dataInizio ; 
 	private LocalDateTime dataFine;
 	@NotBlank
-	private int scenario;
+	private int scenario; //da aggiungere constraints sui valori che può assumere
 	
 	public long getId() {
 		return id;
