@@ -1,18 +1,21 @@
 package com.project.ProgettoSad.service;
 
 import java.util.List;
+
+import org.bson.types.ObjectId;
+
 import com.project.ProgettoSad.model.Game;
 
-//interfaccia relativa ai servizi messi a disposizione riguardo la classe Game
 public interface GameService {
 	
-	Game createGame(Game game);
+	ObjectId createGame(Game game);
 	
-	Game updateGame (Game game);
+	Game endGame(ObjectId GID, String winner);
+	
+	List<Game> readPlayerHistory(String PID);
 	
 	List<Game> getAllGames();
 	
-	Game getGameById(long GID);
+	Game getGameById(ObjectId GID);
 	
-	void deleteGame(long id);
 }
