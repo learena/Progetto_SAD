@@ -8,13 +8,10 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.ProgettoSad.model.Game;
@@ -63,6 +60,11 @@ public class GameController {
 	@GetMapping("/games/player/{PID}")
 	public ResponseEntity <List<Game>> readPlayerHistory(@PathVariable String PID){
 		return ResponseEntity.ok().body(this.ThirdGameService.readPlayerHistory(PID));
+	}
+	
+	@GetMapping("/rounds/find/{GID}")
+	public  ResponseEntity<List<Round>> getRoundByGID(@PathVariable ObjectId GID){
+		return ResponseEntity.ok().body(this.roundService.getRoundByGID(GID));
 	}
 	
 	@GetMapping("/games/rounds/{GID}")

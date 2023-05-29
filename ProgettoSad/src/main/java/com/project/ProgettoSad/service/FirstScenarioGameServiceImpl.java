@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +33,6 @@ public class FirstScenarioGameServiceImpl implements GameService {
 	
 	@Override
 	public String createGame(Game game) {
-		//game.setStartDate(LocalDateTime.now());
 		Game GameDB = gameRepository.save(game);
 		this.roundRepository.save(new Round(GameDB.getId(),1));
 		return GameDB.getId().toString();

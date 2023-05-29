@@ -45,9 +45,10 @@ public class SecondScenarioGameServiceImpl implements GameService {
 		
 		if(GameDB.isPresent()) {
 			Game gameUpdate = GameDB.get();
+			gameUpdate.setId(GID);
 			gameUpdate.setEndDate(LocalDateTime.now());
 			gameUpdate.setWinner(winner);
-			gameRepository.save(gameUpdate);
+			this.gameRepository.save(gameUpdate);
 			return gameUpdate;
 		}
 		else {

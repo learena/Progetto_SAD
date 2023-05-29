@@ -30,6 +30,7 @@ public class RoundServiceImpl implements RoundService {
 		Optional <Round> RoundDB = this.roundRepository.findById(RID);
 		if(RoundDB.isPresent()) {
 			Round roundUpdate = RoundDB.get();
+			roundUpdate.setRoundId(RID);
 			roundUpdate.setTestCase(testCase);
 			this.roundRepository.save(roundUpdate);
 			return roundUpdate;
@@ -44,6 +45,7 @@ public class RoundServiceImpl implements RoundService {
 		Optional <Round> RoundDB = this.roundRepository.findById(RID);
 		if(RoundDB.isPresent()) {
 			Round roundUpdate = RoundDB.get();
+			roundUpdate.setRoundId(RID);
 			roundUpdate.setTestResult(result);
 			this.roundRepository.save(roundUpdate);
 			return roundUpdate;

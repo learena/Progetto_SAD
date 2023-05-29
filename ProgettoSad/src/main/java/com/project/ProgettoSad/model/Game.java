@@ -5,14 +5,12 @@ import java.util.List;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Version;
-import org.springframework.data.domain.Persistable;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import org.bson.types.ObjectId;
 
 @Document (collection = "GameDB")
-public class Game implements Persistable<ObjectId> {
+public class Game{
 	
 	@Id
 	private ObjectId _id;
@@ -32,6 +30,7 @@ public class Game implements Persistable<ObjectId> {
 			List<Guest> guest, Robot robot, int scenario, int totalRoundNumber, ClassUT classUt, String winner) {
 		super();
 		this._id = ObjectId.get();
+		this.startDate = startDate;
 		this.endDate = null;
 		this.host = host;
 		this.guest = guest;
@@ -118,11 +117,6 @@ public class Game implements Persistable<ObjectId> {
 
 	public void setTotalRoundNumber(int totalRoundNumber) {
 		this.totalRoundNumber = totalRoundNumber;
-	}
-
-	@Override
-	public boolean isNew() {
-		return _id==null;
 	}
 	
 }
