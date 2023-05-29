@@ -3,60 +3,60 @@ package com.project.ProgettoSad.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import org.bson.types.ObjectId;
 
 @Document (collection = "GameDB")
-public class Game {
+public class Game implements Persistable<ObjectId> {
 	
 	@Id
-	private ObjectId id; 
-	@NotBlank
+	private ObjectId _id;
+	@CreatedDate
 	private LocalDateTime startDate; 
 	private LocalDateTime endDate;
-	@NotEmpty
 	private Host host;
-	private List<Guest> guest;
-	@NotEmpty 
+	private List<Guest> guest; 
 	Robot robot;
-	@NotBlank
 	private int scenario;
 	private int totalRoundNumber;
-	@NotEmpty
 	private ClassUT classUt;
 	private String winner;
 	
-
 	//CONSTRUCTORS
-	public Game(@NotEmpty Host host,
-			@NotEmpty Robot robot, @NotBlank int scenario, @NotEmpty ClassUT classUt) {
+	public Game(ObjectId _id, LocalDateTime startDate, LocalDateTime endDate, Host host,
+			List<Guest> guest, Robot robot, int scenario, int totalRoundNumber, ClassUT classUt, String winner) {
 		super();
-		this.id = new ObjectId();
-		this.startDate = LocalDateTime.now();
+		this._id = ObjectId.get();
+		this.endDate = null;
 		this.host = host;
+		this.guest = guest;
 		this.robot = robot;
 		this.scenario = scenario;
+		this.totalRoundNumber = totalRoundNumber;
 		this.classUt = classUt;
+		this.winner = null;
 	}
-
+	
 	//GETTERSETTER
 	public ObjectId getId() {
-		return id;
+		return _id;
 	}
 	public void setId(ObjectId id) {
-		this.id = id;
+		this._id = id;
 	}
+	
 	public LocalDateTime getStartDate() {
 		return startDate;
 	}
 	public void setStartDate(LocalDateTime startDate) {
 		this.startDate = startDate;
 	}
+	
 	public LocalDateTime getEndDate() {
 		return endDate;
 	}
@@ -119,13 +119,10 @@ public class Game {
 	public void setTotalRoundNumber(int totalRoundNumber) {
 		this.totalRoundNumber = totalRoundNumber;
 	}
-	
-	//TOSTRING
+
 	@Override
-	public String toString() {
-		return "Game [id=" + id + ", startDate=" + startDate + ", endDate=" + endDate + ", host=" + host + ", guest="
-				+ guest + ", robot=" + robot + ", scenario=" + scenario + ", totalRoundNumber=" + totalRoundNumber
-				+ ", classUt=" + classUt + ", winner=" + winner + "]";
+	public boolean isNew() {
+		return _id==null;
 	}
 	
 }

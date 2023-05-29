@@ -8,10 +8,13 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.ProgettoSad.model.Game;
@@ -95,7 +98,7 @@ public class GameController {
 	}
 	
 	@PostMapping("/games")
-	public ResponseEntity<ObjectId> createGame(@RequestBody Game game){
+	public ResponseEntity<String> createGame(@RequestBody Game game){
 		if(game.getScenario() == 1) {
 			return ResponseEntity.ok().body(this.FirstGameService.createGame(game));
 		}

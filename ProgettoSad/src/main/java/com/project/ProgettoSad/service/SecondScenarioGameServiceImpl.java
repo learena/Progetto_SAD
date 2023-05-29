@@ -31,12 +31,12 @@ public class SecondScenarioGameServiceImpl implements GameService {
 	private MongoTemplate mongoTemplate;
 
 	@Override
-	public ObjectId createGame(Game game) {
+	public String createGame(Game game) {
 		Game GameDB =this.gameRepository.save(game);
 		for(int i = 1; i <= game.getTotalRoundNumber(); i++) {
 		this.roundRepository.save(new Round(GameDB.getId(),i));
 		}
-		return GameDB.getId();
+		return GameDB.getId().toString();
 	}
 
 	@Override

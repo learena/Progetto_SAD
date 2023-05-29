@@ -2,13 +2,24 @@ package com.project.ProgettoSad.model;
 
 public class Robot {
 	private String robotId;
-	private String difficulty = "Normal";
+	private String difficulty;
 	
 	//CONSTRUCTORS
+	
+	public Robot() {
+		super();
+	}
+	
 	public Robot(String robotId, String difficulty) {
 		super();
 		this.robotId = robotId;
 		this.difficulty = difficulty;
+	}
+	
+	public Robot(String robotId) {
+		super();
+		this.robotId = robotId;
+		this.difficulty = "Normal";
 	}
 
 	//GETTERSETTER

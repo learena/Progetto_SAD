@@ -8,7 +8,7 @@ import com.project.ProgettoSad.model.Game;
 
 public interface GameService {
 	
-	ObjectId createGame(Game game);
+	String createGame(Game game);
 	
 	Game endGame(ObjectId GID, String winner);
 	

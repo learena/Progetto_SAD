@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,21 +33,22 @@ public class FirstScenarioGameServiceImpl implements GameService {
 	private MongoTemplate mongoTemplate;
 	
 	@Override
-	public ObjectId createGame(Game game) {
+	public String createGame(Game game) {
+		//game.setStartDate(LocalDateTime.now());
 		Game GameDB = gameRepository.save(game);
 		this.roundRepository.save(new Round(GameDB.getId(),1));
-		return GameDB.getId();
+		return GameDB.getId().toString();
 	}
 	
 	@Override
 	public Game endGame(ObjectId GID,String winner) {
 		Optional <Game> GameDB = this.gameRepository.findById(GID);
-	
 		if(GameDB.isPresent()) {
 			Game gameUpdate = GameDB.get();
-			gameUpdate.setEndDate(LocalDateTime.now());
+			gameUpdate.setId(GID);
 			gameUpdate.setWinner(winner);
-			gameRepository.save(gameUpdate);
+			gameUpdate.setEndDate(LocalDateTime.now());
+			this.gameRepository.save(gameUpdate);
 			return gameUpdate;
 		}
 		else {
