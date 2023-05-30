@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -18,36 +17,41 @@ import com.project.ProgettoSad.exception.ExceptionResourceNotFound;
 import com.project.ProgettoSad.repository.GameRepository;
 import com.project.ProgettoSad.repository.RoundRepository;
 
+
 @Service
 @Transactional
-@Qualifier("Third service")
-public class ThirdScenarioGameServiceImpl implements GameService {
-	
+public class GameServiceImpl implements GameService {
+	 
 	@Autowired
 	private GameRepository gameRepository;
 	@Autowired
 	private RoundRepository roundRepository;
 	@Autowired
 	private MongoTemplate mongoTemplate;
-
+	
 	@Override
 	public String createGame(Game game) {
-		Game GameDB =this.gameRepository.save(game);
-		for(int i = 1; i <= game.getTotalRoundNumber(); i++) {
-		this.roundRepository.save(new Round(GameDB.getId(),i));
-		}
+		Game GameDB = gameRepository.save(game);
+		if (game.getScenario() == 1) {
+		this.roundRepository.save(new Round(GameDB.getId(),1));
 		return GameDB.getId().toString();
+		}
+		else {
+			for(int i = 1; i <= game.getTotalRoundNumber(); i++) {
+				this.roundRepository.save(new Round(GameDB.getId(),i));
+				}
+		}		
+		return GameDB.getId().toString();		
 	}
-
+	
 	@Override
-	public Game endGame(ObjectId GID, String winner) {
+	public Game endGame(ObjectId GID,String winner) {
 		Optional <Game> GameDB = this.gameRepository.findById(GID);
-		
 		if(GameDB.isPresent()) {
 			Game gameUpdate = GameDB.get();
 			gameUpdate.setId(GID);
-			gameUpdate.setEndDate(LocalDateTime.now());
 			gameUpdate.setWinner(winner);
+			gameUpdate.setEndDate(LocalDateTime.now());
 			this.gameRepository.save(gameUpdate);
 			return gameUpdate;
 		}
@@ -57,6 +61,11 @@ public class ThirdScenarioGameServiceImpl implements GameService {
 	}
 
 	@Override
+	public List<Game> getAllGames(){
+		return this.gameRepository.findAll();
+	}
+	
+	@Override
 	public List<Game> readPlayerHistory(String PID) {
 		Criteria criteria = new Criteria();
 		criteria.orOperator(Criteria.where("host.studentId").is(PID),Criteria.where("guest.studentId").is(PID));
@@ -65,13 +74,9 @@ public class ThirdScenarioGameServiceImpl implements GameService {
 		return playerHistory;
 	}
 
+	
 	@Override
-	public List<Game> getAllGames() {
-		return this.gameRepository.findAll();
-	}
-
-	@Override
-	public Game getGameById(ObjectId GID) {
+	public Game getGameById (ObjectId GID) {
 		Optional <Game> GameDB = this.gameRepository.findById(GID);
 		
 		if(GameDB.isPresent()) {

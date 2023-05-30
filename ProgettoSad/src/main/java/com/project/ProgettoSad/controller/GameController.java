@@ -1,10 +1,8 @@
 package com.project.ProgettoSad.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.types.ObjectId;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,29 +16,29 @@ import com.project.ProgettoSad.model.Game;
 import com.project.ProgettoSad.model.Result;
 import com.project.ProgettoSad.model.Round;
 import com.project.ProgettoSad.model.TestCase;
-import com.project.ProgettoSad.service.FirstScenarioGameServiceImpl;
+import com.project.ProgettoSad.service.GameService;
 import com.project.ProgettoSad.service.POJOResponse;
 import com.project.ProgettoSad.service.RoundService;
-import com.project.ProgettoSad.service.SecondScenarioGameServiceImpl;
-import com.project.ProgettoSad.service.ThirdScenarioGameServiceImpl;
+
 
 
 @RestController
 public class GameController {
 	
 	@Autowired
-	private FirstScenarioGameServiceImpl MainGameService;
-	@Autowired
-	private SecondScenarioGameServiceImpl SecondGameService;
-	@Autowired
-	private ThirdScenarioGameServiceImpl ThirdGameService;
-	
+	private GameService gameService;
+
 	@Autowired
 	private RoundService roundService;
 	
+	@PostMapping ("/games")
+	public ResponseEntity <String> createGame(@RequestBody Game game){
+		return ResponseEntity.ok().body(gameService.createGame(game));
+	}
+	
 	@GetMapping("/games")
 	public ResponseEntity <List <Game>> getAllGames(){
-		return ResponseEntity.ok().body(MainGameService.getAllGames());
+		return ResponseEntity.ok().body(gameService.getAllGames());
 	}
 	
 	@GetMapping("/rounds")
@@ -50,7 +48,7 @@ public class GameController {
 	
 	@GetMapping("/games/{GID}")
 	public ResponseEntity <Game> getGameById(@PathVariable ObjectId GID){
-		return ResponseEntity.ok().body(MainGameService.getGameById(GID));
+		return ResponseEntity.ok().body(gameService.getGameById(GID));
 	}
 	
 	@GetMapping("/rounds/{RID}")
@@ -60,7 +58,7 @@ public class GameController {
 	
 	@GetMapping("/games/player/{PID}")
 	public ResponseEntity <List<Game>> readPlayerHistory(@PathVariable String PID){
-		return ResponseEntity.ok().body(this.ThirdGameService.readPlayerHistory(PID));
+		return ResponseEntity.ok().body(this.gameService.readPlayerHistory(PID));
 	}
 	
 	@GetMapping("/rounds/find/{GID}")
@@ -71,7 +69,7 @@ public class GameController {
 	@GetMapping("/games/rounds/{GID}")
     public ResponseEntity<POJOResponse> readGame(@PathVariable ObjectId GID){
         POJOResponse response = new POJOResponse(); 
-        response.setGame(this.MainGameService.getGameById(GID));
+        response.setGame(this.gameService.getGameById(GID));
         response.setRounds(this.roundService.getRoundByGID(GID));
 
         return ResponseEntity.ok().body(response);
@@ -80,7 +78,7 @@ public class GameController {
 	
 	@PutMapping("/games/end/{GID}")
 	public ResponseEntity <Game> endGame(@PathVariable ObjectId GID, @RequestBody String winner){
-		return ResponseEntity.ok().body(this.MainGameService.endGame(GID,winner));
+		return ResponseEntity.ok().body(this.gameService.endGame(GID,winner));
 	}
 	
 	@PutMapping("/rounds/test/{RID}")
