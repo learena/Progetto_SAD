@@ -19,6 +19,7 @@ import com.project.ProgettoSad.model.Result;
 import com.project.ProgettoSad.model.Round;
 import com.project.ProgettoSad.model.TestCase;
 import com.project.ProgettoSad.service.FirstScenarioGameServiceImpl;
+import com.project.ProgettoSad.service.POJOResponse;
 import com.project.ProgettoSad.service.RoundService;
 import com.project.ProgettoSad.service.SecondScenarioGameServiceImpl;
 import com.project.ProgettoSad.service.ThirdScenarioGameServiceImpl;
@@ -28,7 +29,7 @@ import com.project.ProgettoSad.service.ThirdScenarioGameServiceImpl;
 public class GameController {
 	
 	@Autowired
-	private FirstScenarioGameServiceImpl FirstGameService;
+	private FirstScenarioGameServiceImpl MainGameService;
 	@Autowired
 	private SecondScenarioGameServiceImpl SecondGameService;
 	@Autowired
@@ -39,7 +40,7 @@ public class GameController {
 	
 	@GetMapping("/games")
 	public ResponseEntity <List <Game>> getAllGames(){
-		return ResponseEntity.ok().body(FirstGameService.getAllGames());
+		return ResponseEntity.ok().body(MainGameService.getAllGames());
 	}
 	
 	@GetMapping("/rounds")
@@ -49,7 +50,7 @@ public class GameController {
 	
 	@GetMapping("/games/{GID}")
 	public ResponseEntity <Game> getGameById(@PathVariable ObjectId GID){
-		return ResponseEntity.ok().body(FirstGameService.getGameById(GID));
+		return ResponseEntity.ok().body(MainGameService.getGameById(GID));
 	}
 	
 	@GetMapping("/rounds/{RID}")
@@ -68,53 +69,18 @@ public class GameController {
 	}
 	
 	@GetMapping("/games/rounds/{GID}")
-	public ResponseEntity <List<JSONObject>> readGame(ObjectId GID){
-		Game gameEntity = this.FirstGameService.getGameById(GID);
-		List<Round> roundEntityList = this.roundService.getRoundByGID(GID);
-		
-		List<JSONObject> entities = new ArrayList<JSONObject>();
-		
-		JSONObject gEntity = new JSONObject ();
-		gEntity.put("game id",gameEntity.getId());
-		gEntity.put("Start Date",gameEntity.getStartDate());
-		gEntity.put("End Date",gameEntity.getId());
-		gEntity.put("Host",gameEntity.getHost());
-		gEntity.put("Guests",gameEntity.getGuest());
-		gEntity.put("Scenario",gameEntity.getScenario());
-		gEntity.put("Total Round Number",gameEntity.getTotalRoundNumber());
-		gEntity.put("Class Under Test",gameEntity.getClassUt());
-		gEntity.put("Robot",gameEntity.getWinner());
-		
-		entities.add(gEntity);
-		
-		for(Round n : roundEntityList) {
-			JSONObject rEntity = new JSONObject();
-			rEntity.put("round id", n.getGameId());
-			rEntity.put("game id", n.getRoundId());
-			rEntity.put("round number", n.getRoundNumber());
-			rEntity.put("test case", n.getTestCase());
-			entities.add(rEntity);
-		}
-	
-		return ResponseEntity.ok().body(entities);
-	}
-	
-	@PostMapping("/games")
-	public ResponseEntity<String> createGame(@RequestBody Game game){
-		if(game.getScenario() == 1) {
-			return ResponseEntity.ok().body(this.FirstGameService.createGame(game));
-		}
-		else if (game.getScenario() == 2) {
-			return ResponseEntity.ok().body(this.SecondGameService.createGame(game));
-		}
-		else {
-			return ResponseEntity.ok().body(this.ThirdGameService.createGame(game));
-		}
-	}
+    public ResponseEntity<POJOResponse> readGame(@PathVariable ObjectId GID){
+        POJOResponse response = new POJOResponse(); 
+        response.setGame(this.MainGameService.getGameById(GID));
+        response.setRounds(this.roundService.getRoundByGID(GID));
+
+        return ResponseEntity.ok().body(response);
+
+    }
 	
 	@PutMapping("/games/end/{GID}")
 	public ResponseEntity <Game> endGame(@PathVariable ObjectId GID, @RequestBody String winner){
-		return ResponseEntity.ok().body(this.FirstGameService.endGame(GID,winner));
+		return ResponseEntity.ok().body(this.MainGameService.endGame(GID,winner));
 	}
 	
 	@PutMapping("/rounds/test/{RID}")

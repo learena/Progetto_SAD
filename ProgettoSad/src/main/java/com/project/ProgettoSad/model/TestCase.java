@@ -55,9 +55,5 @@ public class TestCase {
 	public String toString() {
 		return "TestCase [studentTest=" + studentTest + ", robotTest=" + robotTest + ", result=" + result + "]";
 	}
-	
-	
-	
-	
-	
+
 }

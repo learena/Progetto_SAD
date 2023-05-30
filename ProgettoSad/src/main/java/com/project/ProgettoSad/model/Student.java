@@ -1,15 +1,17 @@
 package com.project.ProgettoSad.model;
 
-import jakarta.validation.constraints.NotEmpty;
 
 public class Student {
-	@NotEmpty
 	private String studentId;
 
 	//CONSTRUCTORS
-	public Student(@NotEmpty String studentId) {
+	public Student(String studentId) {
 		super();
 		this.studentId = studentId;
+	}
+	
+	public Student() {
+		super();
 	}
 
 	//GETTERSETTER

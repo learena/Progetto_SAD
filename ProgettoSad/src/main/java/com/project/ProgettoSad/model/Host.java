@@ -6,5 +6,9 @@ public class Host extends Student {
 	public Host(String studentId) {
 		super(studentId);
 	}
+	
+	public Host() {
+		super();
+	}
 
 }

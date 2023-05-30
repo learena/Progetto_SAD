@@ -7,12 +7,16 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+
 import org.bson.types.ObjectId;
 
 @Document (collection = "GameDB")
 public class Game{
 	
 	@Id
+	@JsonSerialize(using= ToStringSerializer.class)
 	private ObjectId _id;
 	@CreatedDate
 	private LocalDateTime startDate; 
@@ -26,6 +30,10 @@ public class Game{
 	private String winner;
 	
 	//CONSTRUCTORS
+	public Game() {
+		super();
+	}
+	
 	public Game(ObjectId _id, LocalDateTime startDate, LocalDateTime endDate, Host host,
 			List<Guest> guest, Robot robot, int scenario, int totalRoundNumber, ClassUT classUt, String winner) {
 		super();

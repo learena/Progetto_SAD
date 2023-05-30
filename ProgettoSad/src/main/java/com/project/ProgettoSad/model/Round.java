@@ -4,10 +4,15 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+
 @Document (collection = "RoundDB")
 public class Round {
 	@Id
+	@JsonSerialize(using= ToStringSerializer.class)
 	private ObjectId roundId;
+	@JsonSerialize(using= ToStringSerializer.class)
 	private ObjectId gameId;
 	private int roundNumber;
 	private TestCase testCase;
