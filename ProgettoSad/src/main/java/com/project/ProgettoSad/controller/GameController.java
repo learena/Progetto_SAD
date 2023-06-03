@@ -88,7 +88,7 @@ public class GameController {
 	
 	
 	@PutMapping("/rounds/result/{RID}")
-	public ResponseEntity<Round> updateRoundTest(@PathVariable ObjectId RID, @RequestBody Result result){
+	public ResponseEntity<Round> updateRoundResult(@PathVariable ObjectId RID, @RequestBody Result result){
 		return ResponseEntity.ok().body(this.roundService.updateRoundResult(RID, result));
 	}
 
