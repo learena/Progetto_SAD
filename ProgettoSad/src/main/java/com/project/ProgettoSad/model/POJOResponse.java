@@ -1,9 +1,6 @@
-package com.project.ProgettoSad.service;
+package com.project.ProgettoSad.model;
 
 import java.util.List;
-
-import com.project.ProgettoSad.model.Game;
-import com.project.ProgettoSad.model.Round;
 
 public class POJOResponse {
 

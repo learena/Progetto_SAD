@@ -56,7 +56,7 @@ public class GameServiceImpl implements GameService {
 			return gameUpdate;
 		}
 		else {
-			throw new ExceptionResourceNotFound("Record not found with id : " + GID);
+			throw new ExceptionResourceNotFound("Game document not found with id : " + GID);
 		}
 	}
 
@@ -71,6 +71,9 @@ public class GameServiceImpl implements GameService {
 		criteria.orOperator(Criteria.where("host.studentId").is(PID),Criteria.where("guest.studentId").is(PID));
 		Query query = new Query(criteria);
 		List<Game> playerHistory = mongoTemplate.find(query,Game.class);
+		if(playerHistory.isEmpty()) {
+			throw new ExceptionResourceNotFound("No player exists within the collection with Id:"+PID);
+		}
 		return playerHistory;
 	}
 
@@ -83,7 +86,7 @@ public class GameServiceImpl implements GameService {
 			return GameDB.get();
 		}
 		else {
-			throw new ExceptionResourceNotFound("No Record exists with Id:" + GID);
+			throw new ExceptionResourceNotFound("No Game document exists with Id:" + GID);
 		}
 	}
 }

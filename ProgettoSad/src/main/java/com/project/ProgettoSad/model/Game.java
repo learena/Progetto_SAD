@@ -49,6 +49,20 @@ public class Game{
 		this.winner = null;
 	}
 	
+	public Game(ObjectId _id, LocalDateTime startDate, LocalDateTime endDate, Host host,
+			List<Guest> guest, Robot robot, int scenario, ClassUT classUt, String winner) {
+		super();
+		this._id = ObjectId.get();
+		this.startDate = startDate;
+		this.endDate = null;
+		this.host = host;
+		this.guest = guest;
+		this.robot = robot;
+		this.scenario = scenario;
+		this.totalRoundNumber = 1;
+		this.classUt = classUt;
+		this.winner = null;
+	}
 	//GETTERSETTER
 	public ObjectId getId() {
 		return _id;

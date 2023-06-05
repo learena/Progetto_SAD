@@ -36,7 +36,7 @@ public class RoundServiceImpl implements RoundService {
 			return roundUpdate;
 		}
 		else {
-			throw new ExceptionResourceNotFound("Record not found with id : " + RID);
+			throw new ExceptionResourceNotFound("No Round document exists with id : " + RID);
 		}	
 	}
 	
@@ -51,16 +51,18 @@ public class RoundServiceImpl implements RoundService {
 			return roundUpdate;
 		}
 		else {
-			throw new ExceptionResourceNotFound("Record not found with id : " + RID);
+			throw new ExceptionResourceNotFound("No Round document exists with id: " + RID);
 		}	
 	}
 	
 	public Round readRound(ObjectId GID, int roundNumber) {
-		
 		Criteria criteria = new Criteria();
 		criteria.andOperator(Criteria.where("gameId").is(GID),Criteria.where("roundNumber").is(roundNumber));
 		Query query = new Query(criteria);
 		Round round = (Round) this.mongoTemplate.find(query, Round.class);
+		if(round.getRoundId()== null) {
+			throw new ExceptionResourceNotFound("No Round document exists for the Game with id: " + GID + "and with round number: " + roundNumber);
+		}
 		return round;
 		
 	}
@@ -69,6 +71,9 @@ public class RoundServiceImpl implements RoundService {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("gameId").is(GID));
 		List<Round> round = this.mongoTemplate.find(query, Round.class);
+		if(round.isEmpty()) {
+			throw new ExceptionResourceNotFound("No Round document exists for the Game with id: " + GID);
+		}
 		return round;
 	}
 	
@@ -79,7 +84,7 @@ public class RoundServiceImpl implements RoundService {
 			return RoundDB.get();
 		}
 		else {
-			throw new ExceptionResourceNotFound("Record not found with id : " + RID);
+			throw new ExceptionResourceNotFound("No Round document exists with id: " + RID);
 		}
 	}
 	
