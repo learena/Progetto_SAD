@@ -1,5 +1,6 @@
 package com.project.ProgettoSad.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.bson.types.ObjectId;
@@ -12,7 +13,7 @@ public interface RoundService {
 	
 	Round updateRoundTest(ObjectId RID,TestCase testCase);
 	
-	Round updateRoundResult(ObjectId RID, Result result);
+	Round updateRoundResult(ObjectId RID, Result result) throws IOException;
 	
 	Round readRound(ObjectId GID, int roundNumber);
 	

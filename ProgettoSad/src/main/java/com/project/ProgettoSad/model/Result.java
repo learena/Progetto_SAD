@@ -1,11 +1,18 @@
 package com.project.ProgettoSad.model;
 
 import java.util.List;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+
 import java.util.ArrayList;
 
 public class Result {
+	@JsonSerialize(using= ToStringSerializer.class)
 	private List<Boolean> compilationResult;
+	@JsonSerialize(using= ToStringSerializer.class)
 	private List<Integer> studentScore;
+	@JsonSerialize(using= ToStringSerializer.class)
 	private Integer robotScore;
 	
 	//CONSTRUCTORS
@@ -50,8 +57,8 @@ public class Result {
 	//TOSTRING
 		@Override
 	public String toString() {
-		return "Result [compilationResult=" + compilationResult + ", studentScore=" + studentScore + ", robotScore="
-				+ robotScore + "]";
+		return "Result [ \nCompilation Results (True=Pass/False=Fail):\n" + compilationResult + "\nStudents' Scores:\n" + studentScore + "\nRobot's Score:"
+				+ robotScore + "\n]";
 	}
 	
 	

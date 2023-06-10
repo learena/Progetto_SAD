@@ -26,7 +26,7 @@ public class Student {
 	//TOSTRING
 	@Override
 	public String toString() {
-		return "Student [studentId=" + studentId + "]";
+		return studentId;
 	}
-	
+
 }

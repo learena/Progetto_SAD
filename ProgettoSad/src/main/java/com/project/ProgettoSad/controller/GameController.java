@@ -1,5 +1,6 @@
 package com.project.ProgettoSad.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.bson.types.ObjectId;
@@ -88,7 +89,7 @@ public class GameController {
 	
 	
 	@PutMapping("/rounds/result/{RID}")
-	public ResponseEntity<Round> updateRoundResult(@PathVariable ObjectId RID, @RequestBody Result result){
+	public ResponseEntity<Round> updateRoundResult(@PathVariable ObjectId RID, @RequestBody Result result) throws IOException{
 		return ResponseEntity.ok().body(this.roundService.updateRoundResult(RID, result));
 	}
 

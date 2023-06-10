@@ -1,5 +1,7 @@
 package com.project.ProgettoSad.service;
 
+import java.io.File;
+import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +33,7 @@ public class GameServiceImpl implements GameService {
 	
 	@Override
 	public String createGame(Game game) {
+		
 		Game GameDB = gameRepository.save(game);
 		if (game.getScenario() == 1) {
 		this.roundRepository.save(new Round(GameDB.getId(),1));
@@ -40,7 +43,32 @@ public class GameServiceImpl implements GameService {
 			for(int i = 1; i <= game.getTotalRoundNumber(); i++) {
 				this.roundRepository.save(new Round(GameDB.getId(),i));
 				}
-		}		
+		}
+		
+		Path path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + game.getHost());
+		if(!Files.exists(path)) {
+			File fileHost = new File(path.toString());
+			fileHost.mkdirs();
+		}
+		
+		for(int i = 0; i < game.getGuest().size(); i++) {
+			path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + game.getGuest().get(i).getStudentId());
+			if(!Files.exists(path)) {
+				File fileGuest = new File(path.toString());
+				fileGuest.mkdirs();
+			}
+		}
+		
+		path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + game.getHost() + "\\" + game.getId().toString());
+		File fileHostGame = new File(path.toString());
+		fileHostGame.mkdirs();
+		
+		for(int i = 0; i < game.getGuest().size(); i++) {
+			path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + game.getGuest().get(i).getStudentId() + "\\" + game.getId().toString());
+			File fileGuestGame = new File(path.toString());
+			fileGuestGame.mkdirs();
+		}
+
 		return GameDB.getId().toString();		
 	}
 	
