@@ -83,7 +83,7 @@ public class GameController {
 	}
 	
 	@PutMapping("/rounds/test/{RID}")
-	public ResponseEntity<Round> updateRoundTest(@PathVariable ObjectId RID, @RequestBody TestCase testcase){
+	public ResponseEntity<Round> updateRoundTest(@PathVariable ObjectId RID, @RequestBody TestCase testcase) throws IOException{
 		return ResponseEntity.ok().body(this.roundService.updateRoundTest(RID, testcase));
 	}
 	

@@ -11,7 +11,7 @@ import com.project.ProgettoSad.model.TestCase;
 
 public interface RoundService {
 	
-	Round updateRoundTest(ObjectId RID,TestCase testCase);
+	Round updateRoundTest(ObjectId RID,TestCase testCase) throws IOException;
 	
 	Round updateRoundResult(ObjectId RID, Result result) throws IOException;
 	

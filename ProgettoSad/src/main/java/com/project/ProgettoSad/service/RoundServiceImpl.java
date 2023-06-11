@@ -35,13 +35,58 @@ public class RoundServiceImpl implements RoundService {
 	private MongoTemplate mongoTemplate;
 	
 	@Override
-	public Round updateRoundTest(ObjectId RID, TestCase testCase) {
+	public Round updateRoundTest(ObjectId RID, TestCase testCase) throws IOException {
 		Optional <Round> RoundDB = this.roundRepository.findById(RID);
 		if(RoundDB.isPresent()) {
+			//TODO MODIFICA IL PATH
 			Round roundUpdate = RoundDB.get();
 			roundUpdate.setRoundId(RID);
 			roundUpdate.setTestCase(testCase);
 			this.roundRepository.save(roundUpdate);
+			
+			Optional <Game> GameDB = this.gameRepository.findById(roundUpdate.getGameId());
+			Game gameTmp = GameDB.get();
+			
+			Path path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + gameTmp.getHost() + "\\" + gameTmp.getId().toString() + "\\Round_" + roundUpdate.getRoundNumber());
+			File fileHost = new File(path.toString());
+			fileHost.mkdirs();
+			
+			try {
+				String fileName = new String("TestCase.java");
+				File test = new File(path.toString(),fileName);
+				test.createNewFile();
+				
+				String fileToWrite = new String(path+fileName);
+				Writer writer = new BufferedWriter (new FileWriter(fileToWrite));
+				writer.write(testCase.getStudentTest().get(0));
+				writer.flush();
+				writer.close();
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			for(int i = 0; i < gameTmp.getGuest().size(); i++) {
+				path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + gameTmp.getGuest().get(i).getStudentId() + "\\" + gameTmp.getId().toString() + "\\Round_" + roundUpdate.getRoundNumber());
+				File fileGuest = new File(path.toString());
+				fileGuest.mkdirs();
+				
+				try {
+					String fileName = new String("TestCase.java");
+					File test = new File(path.toString(),fileName);
+					test.createNewFile();
+					
+					String fileToWrite = new String(path+fileName);
+					Writer writer = new BufferedWriter (new FileWriter(fileToWrite));
+					writer.write(testCase.getStudentTest().get(i+1));
+					writer.flush();
+					writer.close();
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
 			return roundUpdate;
 		}
 		else {
