@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.ProgettoSad.model.Game;
 import com.project.ProgettoSad.model.POJOResponse;
-import com.project.ProgettoSad.model.Result;
 import com.project.ProgettoSad.model.Round;
-import com.project.ProgettoSad.model.TestCase;
 import com.project.ProgettoSad.service.GameService;
 import com.project.ProgettoSad.service.RoundService;
 
@@ -77,20 +75,30 @@ public class GameController {
 
     }
 	
+	@GetMapping("/rounds/{GID}/{roundNumber}")
+	public ResponseEntity <String> getRoundByNumber(@PathVariable ObjectId GID, @PathVariable int roundNumber){
+		return ResponseEntity.ok().body(this.roundService.getRoundByNumber(GID, roundNumber));
+	}
+	
 	@PutMapping("/games/end/{GID}")
 	public ResponseEntity <Game> endGame(@PathVariable ObjectId GID, @RequestBody String winner){
 		return ResponseEntity.ok().body(this.gameService.endGame(GID,winner));
 	}
 	
-	@PutMapping("/rounds/test/{RID}")
-	public ResponseEntity<Round> updateRoundTest(@PathVariable ObjectId RID, @RequestBody TestCase testcase) throws IOException{
-		return ResponseEntity.ok().body(this.roundService.updateRoundTest(RID, testcase));
+	@PutMapping("/rounds/{RID}/{PID}")
+	public ResponseEntity<Round> updateTurnTest(@PathVariable ObjectId RID, @PathVariable String PID, @RequestBody String testcase) throws IOException{
+		return ResponseEntity.ok().body(this.roundService.updateTurnTest(RID,PID, testcase));
 	}
 	
 	
 	@PutMapping("/rounds/result/{RID}")
-	public ResponseEntity<Round> updateRoundResult(@PathVariable ObjectId RID, @RequestBody Result result) throws IOException{
-		return ResponseEntity.ok().body(this.roundService.updateRoundResult(RID, result));
+	public ResponseEntity<Round> updateRoundResult(@PathVariable ObjectId RID, @RequestBody String results) throws IOException{
+		return ResponseEntity.ok().body(this.roundService.updateRoundResult(RID, results));
+	}
+	
+	@PutMapping("/rounds/robot/{RID}")
+	public ResponseEntity<Round> joinRobot(@PathVariable ObjectId RID, @RequestBody String robotTest){
+		return ResponseEntity.ok().body(this.roundService.joinRobot(RID, robotTest));
 	}
 
 }

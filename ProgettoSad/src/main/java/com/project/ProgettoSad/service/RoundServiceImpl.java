@@ -35,58 +35,36 @@ public class RoundServiceImpl implements RoundService {
 	private MongoTemplate mongoTemplate;
 	
 	@Override
-	public Round updateRoundTest(ObjectId RID, TestCase testCase) throws IOException {
+	//TODO
+	public Round updateTurnTest(ObjectId RID, String studentId, String testCase) throws IOException {
 		Optional <Round> RoundDB = this.roundRepository.findById(RID);
 		if(RoundDB.isPresent()) {
-			//TODO MODIFICA IL PATH
+			//TODO CONTROLLO SU STUDENT ID
 			Round roundUpdate = RoundDB.get();
 			roundUpdate.setRoundId(RID);
-			roundUpdate.setTestCase(testCase);
+			roundUpdate.getTurn().replace(studentId, testCase);
 			this.roundRepository.save(roundUpdate);
 			
 			Optional <Game> GameDB = this.gameRepository.findById(roundUpdate.getGameId());
 			Game gameTmp = GameDB.get();
 			
-			Path path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + gameTmp.getHost() + "\\" + gameTmp.getId().toString() + "\\Round_" + roundUpdate.getRoundNumber());
+			Path path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + studentId + "\\" + gameTmp.getId().toString() + "\\Round " + roundUpdate.getRoundNumber() + "\\Test Source Code");
 			File fileHost = new File(path.toString());
 			fileHost.mkdirs();
 			
-			try {
-				String fileName = new String("TestCase.java");
-				File test = new File(path.toString(),fileName);
-				test.createNewFile();
-				
-				String fileToWrite = new String(path+fileName);
-				Writer writer = new BufferedWriter (new FileWriter(fileToWrite));
-				writer.write(testCase.getStudentTest().get(0));
-				writer.flush();
-				writer.close();
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			
-			for(int i = 0; i < gameTmp.getGuest().size(); i++) {
-				path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + gameTmp.getGuest().get(i).getStudentId() + "\\" + gameTmp.getId().toString() + "\\Round_" + roundUpdate.getRoundNumber());
-				File fileGuest = new File(path.toString());
-				fileGuest.mkdirs();
-				
-				try {
-					String fileName = new String("TestCase.java");
-					File test = new File(path.toString(),fileName);
-					test.createNewFile();
-					
-					String fileToWrite = new String(path+fileName);
-					Writer writer = new BufferedWriter (new FileWriter(fileToWrite));
-					writer.write(testCase.getStudentTest().get(i+1));
-					writer.flush();
-					writer.close();
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			
+			  try { 
+				  String fileName = new String("Test.class"); 
+				  File test = new File(path.toString(),fileName); test.createNewFile();
+				  
+				  String fileToWrite = new String(path+fileName); 
+				  Writer writer = new BufferedWriter (new FileWriter(fileToWrite)); 
+				  writer.write(testCase);
+				  
+				  writer.flush(); 
+				  writer.close();
+			  
+			  } catch (Exception e) { e.printStackTrace(); }
+			  
 			return roundUpdate;
 		}
 		else {
@@ -95,7 +73,7 @@ public class RoundServiceImpl implements RoundService {
 	}
 	
 	@Override
-	public Round updateRoundResult(ObjectId RID, Result result) throws IOException {
+	public Round updateRoundResult(ObjectId RID, String results) throws IOException {
 		Optional <Round> RoundDB = this.roundRepository.findById(RID);
 		if(RoundDB.isPresent()) {
 			Round roundUpdate = RoundDB.get();
@@ -103,12 +81,12 @@ public class RoundServiceImpl implements RoundService {
 			Game gameTmp = GameDB.get();
 			
 			roundUpdate.setRoundId(RID);
-			roundUpdate.setTestResult(result);
+			roundUpdate.setResults(results);
 			this.roundRepository.save(roundUpdate);
 			
-			Path path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + gameTmp.getHost()+"\\"+ gameTmp.getId().toString() + "\\Round_" + roundUpdate.getRoundNumber());
+			Path path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + gameTmp.getHost().getStudentId()+"\\"+ gameTmp.getId().toString() + "\\Round " + roundUpdate.getRoundNumber() + "\\Test Report");
 			File file = new File(path.toString());
-			file.mkdir();
+			file.mkdirs();
 			
 			try {
 				String fileName = new String("Result.txt");
@@ -117,12 +95,8 @@ public class RoundServiceImpl implements RoundService {
 				
 				String fileToWrite = new String(path+"\\Result.txt");
 				Writer writer = new BufferedWriter (new FileWriter(fileToWrite));
-				if(result.getCompilationResult().get(0)) {
-					writer.write("Host Compilation Result (TRUE=PASS/FALSE=FAIL):"+result.getCompilationResult().get(0).toString()+ "\nHost Score:" + result.getStudentScore().get(0).toString());
-				}
-				else {
-					writer.write("Host Compilation Result (TRUE=PASS/FALSE=FAIL):"+result.getCompilationResult().get(0).toString()+ "\nStudent did not pass the test!");
-				}
+				writer.write(results);
+				
 				writer.flush();
 				writer.close();
 				
@@ -131,7 +105,7 @@ public class RoundServiceImpl implements RoundService {
 			}
 			
 			for(int i = 0; i < gameTmp.getGuest().size(); i++) {
-				path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + gameTmp.getGuest().get(i).getStudentId()+"\\"+ gameTmp.getId().toString() + "\\Round_" + roundUpdate.getRoundNumber());
+				path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + gameTmp.getGuest().get(i).getStudentId()+"\\"+ gameTmp.getId().toString() + "\\Round " + roundUpdate.getRoundNumber() + "\\Test Report");
 				file = new File(path.toString());
 				file.mkdirs();
 				try {
@@ -141,12 +115,8 @@ public class RoundServiceImpl implements RoundService {
 					
 					String fileToWrite = new String(path+"\\Result.txt");
 					Writer writer = new BufferedWriter (new FileWriter(fileToWrite));
-					if(result.getCompilationResult().get(i+1)) {
-						writer.write("Guest Compilation Result (TRUE=PASS/FALSE=FAIL):"+result.getCompilationResult().get(i+1).toString()+ "\nGuest Score:" + result.getStudentScore().get(i+1).toString());
-					}
-					else {
-						writer.write("Guest Compilation Result (TRUE=PASS/FALSE=FAIL):"+result.getCompilationResult().get(i+1).toString()+ "\nStudent did not pass the test!");
-					}
+					writer.write(results);
+					
 					writer.flush();
 					writer.close();
 
@@ -161,17 +131,23 @@ public class RoundServiceImpl implements RoundService {
 		}	
 	}
 	
-	public Round readRound(ObjectId GID, int roundNumber) {
-		Criteria criteria = new Criteria();
-		criteria.andOperator(Criteria.where("gameId").is(GID),Criteria.where("roundNumber").is(roundNumber));
-		Query query = new Query(criteria);
-		Round round = (Round) this.mongoTemplate.find(query, Round.class);
-		if(round.getRoundId()== null) {
-			throw new ExceptionResourceNotFound("No Round document exists for the Game with id: " + GID + "and with round number: " + roundNumber);
-		}
-		return round;
+	@Override
+	public Round joinRobot(ObjectId RID, String robotTest) {
+		Optional <Round> RoundDB = this.roundRepository.findById(RID);
 		
+		if(RoundDB.isPresent()) {
+			Round roundUpdate = RoundDB.get();
+			roundUpdate.setRoundId(RID);
+			roundUpdate.setRobotTest(robotTest);
+			this.roundRepository.save(roundUpdate);
+			
+			return roundUpdate;
+		}
+		else {
+			throw new ExceptionResourceNotFound("No Round document exists with id:" + RID);
+		}
 	}
+	
 	
 	public List<Round> getRoundByGID(ObjectId GID) {
 		Query query = new Query();
@@ -192,6 +168,18 @@ public class RoundServiceImpl implements RoundService {
 		else {
 			throw new ExceptionResourceNotFound("No Round document exists with id: " + RID);
 		}
+	}
+	
+	@Override
+	public String getRoundByNumber(ObjectId GID, int roundNumber) {
+		Criteria criteria = new Criteria();
+		criteria.andOperator(Criteria.where("gameId").is(GID),Criteria.where("roundNumber").is(roundNumber));
+		Query query = new Query(criteria);
+		Round round = (Round) this.mongoTemplate.find(query, Round.class);
+		if(round.getRoundId()== null) {
+			throw new ExceptionResourceNotFound("No Round document exists for the Game with id: " + GID + "and with round number: " + roundNumber);
+		}
+		return round.getRoundId().toString();
 	}
 	
 	@Override

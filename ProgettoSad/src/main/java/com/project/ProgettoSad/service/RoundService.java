@@ -5,21 +5,21 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 
-import com.project.ProgettoSad.model.Result;
-import com.project.ProgettoSad.model.Round;
-import com.project.ProgettoSad.model.TestCase;
+import com.project.ProgettoSad.model.*;
 
 public interface RoundService {
 	
-	Round updateRoundTest(ObjectId RID,TestCase testCase) throws IOException;
+	Round updateTurnTest(ObjectId RID, String studentId, String testCase) throws IOException;
 	
-	Round updateRoundResult(ObjectId RID, Result result) throws IOException;
+	Round updateRoundResult(ObjectId RID, String result) throws IOException;
 	
-	Round readRound(ObjectId GID, int roundNumber);
+	Round joinRobot(ObjectId RID, String robotTest);
 	
 	Round getRoundById(ObjectId RID);
 	
 	List<Round> getRoundByGID(ObjectId GID);
+	
+	String getRoundByNumber(ObjectId GID, int roundNumber);
 	
 	List<Round> getAllRounds();
 }

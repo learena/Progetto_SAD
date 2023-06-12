@@ -36,13 +36,27 @@ public class GameServiceImpl implements GameService {
 		
 		Game GameDB = gameRepository.save(game);
 		if (game.getScenario() == 1) {
-		this.roundRepository.save(new Round(GameDB.getId(),1));
-		return GameDB.getId().toString();
+			Round roundTmp = new Round(GameDB.getId(),1);
+			roundTmp.getTurn().put(game.getHost().getStudentId(), "N/A");
+			this.roundRepository.save(roundTmp );
+		}
+		else if(game.getScenario() == 2) {
+			for(int i = 1; i <= game.getTotalRoundNumber(); i++) {
+				Round roundTmp = new Round(GameDB.getId(),i);
+				roundTmp.getTurn().put(game.getHost().getStudentId(), "N/A");
+				this.roundRepository.save(roundTmp);
+			}
 		}
 		else {
 			for(int i = 1; i <= game.getTotalRoundNumber(); i++) {
-				this.roundRepository.save(new Round(GameDB.getId(),i));
-				}
+				Round roundTmp = new Round(GameDB.getId(),i);
+					roundTmp.getTurn().put(game.getHost().getStudentId(), "N/A");
+					for(int j = 0; j < game.getGuest().size(); j++) {
+						roundTmp.getTurn().put(game.getGuest().get(j).getStudentId(), "N/A");
+					}				
+					
+				this.roundRepository.save(roundTmp);
+			}
 		}
 		
 		Path path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + game.getHost());
@@ -51,22 +65,27 @@ public class GameServiceImpl implements GameService {
 			fileHost.mkdirs();
 		}
 		
-		for(int i = 0; i < game.getGuest().size(); i++) {
-			path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + game.getGuest().get(i).getStudentId());
-			if(!Files.exists(path)) {
-				File fileGuest = new File(path.toString());
-				fileGuest.mkdirs();
+		if(game.getScenario() == 3) {
+			for(int i = 0; i < game.getGuest().size(); i++) {
+				path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + game.getGuest().get(i).getStudentId());
+				if(!Files.exists(path)) {
+					File fileGuest = new File(path.toString());
+					fileGuest.mkdirs();
+				}
 			}
 		}
+
 		
 		path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + game.getHost() + "\\" + game.getId().toString());
 		File fileHostGame = new File(path.toString());
 		fileHostGame.mkdirs();
 		
-		for(int i = 0; i < game.getGuest().size(); i++) {
-			path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + game.getGuest().get(i).getStudentId() + "\\" + game.getId().toString());
-			File fileGuestGame = new File(path.toString());
-			fileGuestGame.mkdirs();
+		if(game.getScenario() == 3) {
+			for(int i = 0; i < game.getGuest().size(); i++) {
+				path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + game.getGuest().get(i).getStudentId() + "\\" + game.getId().toString());
+				File fileGuestGame = new File(path.toString());
+				fileGuestGame.mkdirs();
+			}	
 		}
 
 		return GameDB.getId().toString();		
