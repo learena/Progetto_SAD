@@ -48,17 +48,16 @@ public class RoundServiceImpl implements RoundService {
 			Optional <Game> GameDB = this.gameRepository.findById(roundUpdate.getGameId());
 			Game gameTmp = GameDB.get();
 			
-			Path path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + studentId + "\\" + gameTmp.getId().toString() + "\\Round " + roundUpdate.getRoundNumber() + "\\Test Source Code");
+			Path path = Paths.get("C:\\Users\\Public\\AUTName\\" + studentId + "\\" + gameTmp.getId().toString() + "\\Round " + roundUpdate.getRoundNumber() + "\\Test Source Code");
 			File fileHost = new File(path.toString());
 			fileHost.mkdirs();
 			
 			  try { 
 				  String fileName = new String("Test.class"); 
-				  File test = new File(path.toString(),fileName); 
+				  File test = new File(path.toString(), fileName); 
 				  test.createNewFile();
 				  
-				  String fileToWrite = new String(path+fileName); 
-				  Writer writer = new BufferedWriter (new FileWriter(fileToWrite)); 
+				  Writer writer = new BufferedWriter (new FileWriter(test)); 
 				  writer.write(testCase);
 				  
 				  writer.flush(); 
@@ -85,7 +84,7 @@ public class RoundServiceImpl implements RoundService {
 			roundUpdate.setResults(results);
 			this.roundRepository.save(roundUpdate);
 			
-			Path path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + gameTmp.getHost().getStudentId()+"\\"+ gameTmp.getId().toString() + "\\Round " + roundUpdate.getRoundNumber() + "\\Test Report");
+			Path path = Paths.get("C:\\Users\\Public\\AUTName\\" + gameTmp.getHost().getStudentId()+"\\"+ gameTmp.getId().toString() + "\\Round " + roundUpdate.getRoundNumber() + "\\Test Report");
 			File file = new File(path.toString());
 			file.mkdirs();
 			
@@ -106,7 +105,7 @@ public class RoundServiceImpl implements RoundService {
 			}
 			
 			for(int i = 0; i < gameTmp.getGuest().size(); i++) {
-				path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + gameTmp.getGuest().get(i).getStudentId()+"\\"+ gameTmp.getId().toString() + "\\Round " + roundUpdate.getRoundNumber() + "\\Test Report");
+				path = Paths.get("C:\\Users\\Public\\AUTName\\" + gameTmp.getGuest().get(i).getStudentId()+"\\"+ gameTmp.getId().toString() + "\\Round " + roundUpdate.getRoundNumber() + "\\Test Report");
 				file = new File(path.toString());
 				file.mkdirs();
 				try {

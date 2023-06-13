@@ -64,7 +64,7 @@ public class GameServiceImpl implements GameService {
 			}
 		}
 		
-		Path path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + game.getHost());
+		Path path = Paths.get("C:\\Users\\Public\\AUTName\\" + game.getHost());
 		if(!Files.exists(path)) {
 			File fileHost = new File(path.toString());
 			fileHost.mkdirs();
@@ -72,7 +72,7 @@ public class GameServiceImpl implements GameService {
 		
 		if(game.getScenario() == 3) {
 			for(int i = 0; i < game.getGuest().size(); i++) {
-				path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + game.getGuest().get(i).getStudentId());
+				path = Paths.get("C:\\Users\\Public\\AUTName\\" + game.getGuest().get(i).getStudentId());
 				if(!Files.exists(path)) {
 					File fileGuest = new File(path.toString());
 					fileGuest.mkdirs();
@@ -81,13 +81,13 @@ public class GameServiceImpl implements GameService {
 		}
 
 		
-		path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + game.getHost() + "\\" + game.getId().toString());
+		path = Paths.get("C:\\Users\\Public\\AUTName\\" + game.getHost() + "\\" + game.getId().toString());
 		File fileHostGame = new File(path.toString());
 		fileHostGame.mkdirs();
 		
 		if(game.getScenario() == 3) {
 			for(int i = 0; i < game.getGuest().size(); i++) {
-				path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + game.getGuest().get(i).getStudentId() + "\\" + game.getId().toString());
+				path = Paths.get("C:\\Users\\Public\\AUTName\\" + game.getGuest().get(i).getStudentId() + "\\" + game.getId().toString());
 				File fileGuestGame = new File(path.toString());
 				fileGuestGame.mkdirs();
 			}	
@@ -106,7 +106,7 @@ public class GameServiceImpl implements GameService {
 			gameUpdate.setEndDate(LocalDateTime.now());
 			this.gameRepository.save(gameUpdate);
 			
-			Path path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + gameUpdate.getHost() + "\\" + gameUpdate.getId().toString()+"\\Game.csv");
+			Path path = Paths.get("C:\\Users\\Public\\AUTName\\" + gameUpdate.getHost() + "\\" + gameUpdate.getId().toString()+"\\Game.csv");
 			File file = new File(path.toString());
 			//file.mkdirs();
 			
@@ -122,8 +122,10 @@ public class GameServiceImpl implements GameService {
 				csvWriter.writeNext(data);
 				csvWriter.flush();
 				
+				if (gameUpdate.getScenario()==3) {
+				
 				for(int i = 0; i < gameUpdate.getGuest().size(); i++) {
-					path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + gameUpdate.getGuest().get(i).getStudentId() + "\\" + gameUpdate.getId().toString()+"\\Game.csv");
+					path = Paths.get("C:\\Users\\Public\\AUTName\\" + gameUpdate.getGuest().get(i).getStudentId() + "\\" + gameUpdate.getId().toString()+"\\Game.csv");
 					file = new File(path.toString());
 					
 					writer = new FileWriter(file);
@@ -131,6 +133,7 @@ public class GameServiceImpl implements GameService {
 					
 					csvWriter.writeNext(header);
 					csvWriter.writeNext(data);
+				}
 					
 				}
 				
