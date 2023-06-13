@@ -1,6 +1,10 @@
 package com.project.ProgettoSad.service;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.project.ProgettoSad.model.*;
+import com.opencsv.CSVWriter;
 import com.project.ProgettoSad.exception.ExceptionResourceNotFound;
 import com.project.ProgettoSad.repository.GameRepository;
 import com.project.ProgettoSad.repository.RoundRepository;
@@ -92,7 +97,7 @@ public class GameServiceImpl implements GameService {
 	}
 	
 	@Override
-	public Game endGame(ObjectId GID,String winner) {
+	public Game endGame(ObjectId GID,String winner) throws IOException {
 		Optional <Game> GameDB = this.gameRepository.findById(GID);
 		if(GameDB.isPresent()) {
 			Game gameUpdate = GameDB.get();
@@ -100,6 +105,40 @@ public class GameServiceImpl implements GameService {
 			gameUpdate.setWinner(winner);
 			gameUpdate.setEndDate(LocalDateTime.now());
 			this.gameRepository.save(gameUpdate);
+			
+			Path path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + gameUpdate.getHost() + "\\" + gameUpdate.getId().toString()+"\\Game.csv");
+			File file = new File(path.toString());
+			//file.mkdirs();
+			
+			try {
+				FileWriter writer = new FileWriter(file);
+				CSVWriter csvWriter = new CSVWriter(writer);
+				
+				String[] header = {"ID", "Host", "Guest","Robot","Difficulty","Scenario","Number of Rounds","ClassUT ID","ClassUT Path","Started At","Ended At","Winner"};
+				csvWriter.writeNext(header);
+				csvWriter.flush();
+				
+				String[] data = {gameUpdate.getId().toString(), gameUpdate.getHost().getStudentId(), gameUpdate.getGuest().toString(), gameUpdate.getRobot().getRobotId(), gameUpdate.getRobot().getDifficulty(), ""+gameUpdate.getScenario()+"", ""+gameUpdate.getTotalRoundNumber()+"", gameUpdate.getClassUt().getClassId(), gameUpdate.getClassUt().getClassBody(), gameUpdate.getStartDate().toString(), gameUpdate.getEndDate().toString(), gameUpdate.getWinner()};
+				csvWriter.writeNext(data);
+				csvWriter.flush();
+				
+				for(int i = 0; i < gameUpdate.getGuest().size(); i++) {
+					path = Paths.get("C:\\Users\\Volgani\\Desktop\\AUTName\\" + gameUpdate.getGuest().get(i).getStudentId() + "\\" + gameUpdate.getId().toString()+"\\Game.csv");
+					file = new File(path.toString());
+					
+					writer = new FileWriter(file);
+					csvWriter = new CSVWriter(writer);
+					
+					csvWriter.writeNext(header);
+					csvWriter.writeNext(data);
+					
+				}
+				
+				csvWriter.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
 			return gameUpdate;
 		}
 		else {

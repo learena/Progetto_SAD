@@ -1,5 +1,6 @@
 package com.project.ProgettoSad.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.bson.types.ObjectId;
@@ -10,7 +11,7 @@ public interface GameService {
 	
 	String createGame(Game game);
 	
-	Game endGame(ObjectId GID, String winner);
+	Game endGame(ObjectId GID, String winner) throws IOException;
 	
 	List<Game> readPlayerHistory(String PID);
 	

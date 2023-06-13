@@ -7,4 +7,11 @@ public class Guest extends Student {
 		super(studentId);
 	}
 
+	@Override
+	public String toString() {
+		return "|["+this.getStudentId()+"]|";
+	}
+	
+	
+
 }
