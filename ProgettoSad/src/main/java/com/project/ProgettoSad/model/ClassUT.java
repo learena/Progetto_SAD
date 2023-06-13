@@ -1,7 +1,11 @@
 package com.project.ProgettoSad.model;
 
+import jakarta.validation.constraints.NotNull;
+
 public class ClassUT {
+	@NotNull
 	private String classId;
+	@NotNull
 	private String classBody;
 
 	//CONSTRUCTORS

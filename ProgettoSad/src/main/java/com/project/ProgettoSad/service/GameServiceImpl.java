@@ -1,10 +1,8 @@
 package com.project.ProgettoSad.service;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.project.ProgettoSad.model.*;
 import com.opencsv.CSVWriter;
+import com.project.ProgettoSad.exception.ExceptionIllegalParameters;
+import com.project.ProgettoSad.exception.ExceptionMandatoryFields;
 import com.project.ProgettoSad.exception.ExceptionResourceNotFound;
 import com.project.ProgettoSad.repository.GameRepository;
 import com.project.ProgettoSad.repository.RoundRepository;
@@ -36,8 +36,23 @@ public class GameServiceImpl implements GameService {
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	
+	public void check(Game game) throws ExceptionMandatoryFields, ExceptionIllegalParameters {
+		if(game.getHost() == null || game.getClassUt() == null) {
+			throw new ExceptionMandatoryFields("Host and ClassUT are mandatory!");
+		}
+		
+		if(game.getScenario() != 3 && game.getGuest() != null) {
+			throw new ExceptionIllegalParameters("Game doesn't allow for Guests!");
+		}
+		else if((game.getScenario() == 1 && game.getTotalRoundNumber() != 1)) {
+			throw new ExceptionIllegalParameters("First Scenario cannot have more than one round!");
+		}
+	}
+	
 	@Override
-	public String createGame(Game game) {
+	public String createGame(Game game) throws ExceptionIllegalParameters, ExceptionMandatoryFields {
+		
+		check(game);
 		
 		Game GameDB = gameRepository.save(game);
 		if (game.getScenario() == 1) {
@@ -117,26 +132,28 @@ public class GameServiceImpl implements GameService {
 				String[] header = {"ID", "Host", "Guest","Robot","Difficulty","Scenario","Number of Rounds","ClassUT ID","ClassUT Path","Started At","Ended At","Winner"};
 				csvWriter.writeNext(header);
 				csvWriter.flush();
-				
-				String[] data = {gameUpdate.getId().toString(), gameUpdate.getHost().getStudentId(), gameUpdate.getGuest().toString(), gameUpdate.getRobot().getRobotId(), gameUpdate.getRobot().getDifficulty(), ""+gameUpdate.getScenario()+"", ""+gameUpdate.getTotalRoundNumber()+"", gameUpdate.getClassUt().getClassId(), gameUpdate.getClassUt().getClassBody(), gameUpdate.getStartDate().toString(), gameUpdate.getEndDate().toString(), gameUpdate.getWinner()};
-				csvWriter.writeNext(data);
-				csvWriter.flush();
-				
-				if (gameUpdate.getScenario()==3) {
-				
-				for(int i = 0; i < gameUpdate.getGuest().size(); i++) {
-					path = Paths.get("C:\\Users\\Public\\AUTName\\" + gameUpdate.getGuest().get(i).getStudentId() + "\\" + gameUpdate.getId().toString()+"\\Game.csv");
-					file = new File(path.toString());
-					
-					writer = new FileWriter(file);
-					csvWriter = new CSVWriter(writer);
-					
-					csvWriter.writeNext(header);
+
+				if(gameUpdate.getScenario()==3) {
+					String[] data = {gameUpdate.getId().toString(), gameUpdate.getHost().getStudentId(), gameUpdate.getGuest().toString(), gameUpdate.getRobot().getRobotId(), gameUpdate.getRobot().getDifficulty(), ""+gameUpdate.getScenario()+"", ""+gameUpdate.getTotalRoundNumber()+"", gameUpdate.getClassUt().getClassId(), gameUpdate.getClassUt().getClassBody(), gameUpdate.getStartDate().toString(), gameUpdate.getEndDate().toString(), gameUpdate.getWinner()};
 					csvWriter.writeNext(data);
+					csvWriter.flush();				
+
+					for(int i = 0; i < gameUpdate.getGuest().size(); i++) {
+						path = Paths.get("C:\\Users\\Public\\AUTName\\" + gameUpdate.getGuest().get(i).getStudentId() + "\\" + gameUpdate.getId().toString()+"\\Game.csv");
+						file = new File(path.toString());
+
+						writer = new FileWriter(file);
+						csvWriter = new CSVWriter(writer);
+
+						csvWriter.writeNext(header);
+						csvWriter.writeNext(data);
+					}
 				}
-					
+				else {
+					String[] data = {gameUpdate.getId().toString(), gameUpdate.getHost().getStudentId(), "N/A", gameUpdate.getRobot().getRobotId(), gameUpdate.getRobot().getDifficulty(), ""+gameUpdate.getScenario()+"", ""+gameUpdate.getTotalRoundNumber()+"", gameUpdate.getClassUt().getClassId(), gameUpdate.getClassUt().getClassBody(), gameUpdate.getStartDate().toString(), gameUpdate.getEndDate().toString(), gameUpdate.getWinner()};
+					csvWriter.writeNext(data);
+					csvWriter.flush();
 				}
-				
 				csvWriter.close();
 			} catch (IOException e) {
 				e.printStackTrace();

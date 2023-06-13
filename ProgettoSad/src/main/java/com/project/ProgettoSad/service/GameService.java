@@ -5,11 +5,13 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 
+import com.project.ProgettoSad.exception.ExceptionIllegalParameters;
+import com.project.ProgettoSad.exception.ExceptionMandatoryFields;
 import com.project.ProgettoSad.model.Game;
 
 public interface GameService {
 	
-	String createGame(Game game);
+	String createGame(Game game) throws ExceptionIllegalParameters, ExceptionMandatoryFields;
 	
 	Game endGame(ObjectId GID, String winner) throws IOException;
 	

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.project.ProgettoSad.model.*;
+import com.project.ProgettoSad.exception.ExceptionIllegalParameters;
 import com.project.ProgettoSad.exception.ExceptionResourceNotFound;
 import com.project.ProgettoSad.repository.GameRepository;
 import com.project.ProgettoSad.repository.RoundRepository;
@@ -35,13 +36,14 @@ public class RoundServiceImpl implements RoundService {
 	private MongoTemplate mongoTemplate;
 	
 	@Override
-	//TODO
-	public Round updateTurnTest(ObjectId RID, String studentId, String testCase) throws IOException {
+	public Round updateTurnTest(ObjectId RID, String studentId, String testCase) throws IOException, ExceptionIllegalParameters {
 		Optional <Round> RoundDB = this.roundRepository.findById(RID);
 		if(RoundDB.isPresent()) {
-			//TODO CONTROLLO SU STUDENT ID
 			Round roundUpdate = RoundDB.get();
 			roundUpdate.setRoundId(RID);
+			if(!roundUpdate.getTurn().containsKey(studentId)) {
+				throw new ExceptionIllegalParameters("No student with the selected id has joined the game!");
+			}
 			roundUpdate.getTurn().replace(studentId, testCase);
 			this.roundRepository.save(roundUpdate);
 			
@@ -104,24 +106,25 @@ public class RoundServiceImpl implements RoundService {
 				e.printStackTrace();
 			}
 			
-			for(int i = 0; i < gameTmp.getGuest().size(); i++) {
-				path = Paths.get("C:\\Users\\Public\\AUTName\\" + gameTmp.getGuest().get(i).getStudentId()+"\\"+ gameTmp.getId().toString() + "\\Round " + roundUpdate.getRoundNumber() + "\\Test Report");
-				file = new File(path.toString());
-				file.mkdirs();
-				try {
-					String fileName = new String("Result.txt");
-					File report = new File(path.toString(),fileName);
-					report.createNewFile();
-					
-					String fileToWrite = new String(path+"\\Result.txt");
-					Writer writer = new BufferedWriter (new FileWriter(fileToWrite));
-					writer.write(results);
-					
-					writer.flush();
-					writer.close();
+			if(gameTmp.getScenario() == 3) {
+				for(int i = 0; i < gameTmp.getGuest().size(); i++) {
+					path = Paths.get("C:\\Users\\Public\\AUTName\\" + gameTmp.getGuest().get(i).getStudentId()+"\\"+ gameTmp.getId().toString() + "\\Round " + roundUpdate.getRoundNumber() + "\\Test Report");
+					file = new File(path.toString());
+					file.mkdirs();
+					try {
+						String fileName = new String("Result.txt");
+						File report = new File(path.toString(),fileName);
+						report.createNewFile();
 
-				} catch (IOException e) {
-					e.printStackTrace();
+						String fileToWrite = new String(path+"\\Result.txt");
+						Writer writer = new BufferedWriter (new FileWriter(fileToWrite));
+						writer.write(results);
+
+						writer.flush();
+						writer.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 			return roundUpdate;

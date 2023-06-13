@@ -1,7 +1,9 @@
 package com.project.ProgettoSad.model;
 
+import jakarta.validation.constraints.NotNull;
 
 public class Student {
+	@NotNull
 	private String studentId;
 
 	//CONSTRUCTORS

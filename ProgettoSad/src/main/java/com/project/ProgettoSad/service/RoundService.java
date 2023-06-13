@@ -5,11 +5,12 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 
+import com.project.ProgettoSad.exception.ExceptionIllegalParameters;
 import com.project.ProgettoSad.model.*;
 
 public interface RoundService {
 	
-	Round updateTurnTest(ObjectId RID, String studentId, String testCase) throws IOException;
+	Round updateTurnTest(ObjectId RID, String studentId, String testCase) throws IOException, ExceptionIllegalParameters;
 	
 	Round updateRoundResult(ObjectId RID, String result) throws IOException;
 	

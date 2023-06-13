@@ -13,11 +13,15 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.ProgettoSad.exception.ExceptionIllegalParameters;
+import com.project.ProgettoSad.exception.ExceptionMandatoryFields;
 import com.project.ProgettoSad.model.Game;
 import com.project.ProgettoSad.model.POJOResponse;
 import com.project.ProgettoSad.model.Round;
 import com.project.ProgettoSad.service.GameService;
 import com.project.ProgettoSad.service.RoundService;
+
+import jakarta.validation.Valid;
 
 
 
@@ -31,7 +35,7 @@ public class GameController {
 	private RoundService roundService;
 	
 	@PostMapping ("/games")
-	public ResponseEntity <String> createGame(@RequestBody Game game){
+	public ResponseEntity <String> createGame(@Valid @RequestBody Game game) throws ExceptionIllegalParameters, ExceptionMandatoryFields{
 		return ResponseEntity.ok().body(gameService.createGame(game));
 	}
 	
@@ -86,7 +90,7 @@ public class GameController {
 	}
 	
 	@PutMapping("/rounds/{RID}/{PID}")
-	public ResponseEntity<Round> updateTurnTest(@PathVariable ObjectId RID, @PathVariable String PID, @RequestBody String testcase) throws IOException{
+	public ResponseEntity<Round> updateTurnTest(@PathVariable ObjectId RID, @PathVariable String PID, @RequestBody String testcase) throws IOException, ExceptionIllegalParameters{
 		return ResponseEntity.ok().body(this.roundService.updateTurnTest(RID,PID, testcase));
 	}
 	

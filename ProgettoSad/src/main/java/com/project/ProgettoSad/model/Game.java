@@ -7,8 +7,12 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 
 import org.bson.types.ObjectId;
 
@@ -19,12 +23,17 @@ public class Game{
 	@JsonSerialize(using= ToStringSerializer.class)
 	private ObjectId _id;
 	@CreatedDate
-	private LocalDateTime startDate; 
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime startDate;
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime endDate;
 	private Host host;
 	private List<Guest> guest; 
 	Robot robot;
+	@Min(value = 1)
+	@Max(value = 3)
 	private int scenario;
+	@Min(value = 1)
 	private int totalRoundNumber;
 	private ClassUT classUt;
 	private String winner;
