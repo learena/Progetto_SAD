@@ -13,7 +13,7 @@ public interface GameService {
 	
 	String createGame(Game game) throws ExceptionIllegalParameters, ExceptionMandatoryFields;
 	
-	Game endGame(ObjectId GID, String winner) throws IOException;
+	Game endGame(ObjectId GID, String winner) throws IOException, ExceptionIllegalParameters;
 	
 	List<Game> readPlayerHistory(String PID);
 	
