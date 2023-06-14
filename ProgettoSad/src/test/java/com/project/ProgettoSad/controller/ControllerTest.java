@@ -233,35 +233,72 @@ class ControllerTest {
 	}
 
 	@Test
-	void GivenEverythingIsOk_WhenGameEnds_ThenStatusCode200IsReceived() throws ExceptionResourceNotFound {
-		String winner = new String("Ciccio_Cecchin");
-		given().contentType("application/json").body(winner).pathParam("GID","6489c8c7eb21cc25289e6f2e").when().put("/games/end/{GID}").then().assertThat()
+	void GivenEverythingIsOk_WhenGameEnds_ThenStatusCode200IsReceived() throws ExceptionResourceNotFound, ExceptionIllegalParameters {
+		String winner = new String("cane");
+		given().contentType("application/json").body(winner).pathParam("GID","6489ddee4456683a05eefa93").when().put("/games/end/{GID}").then().assertThat()
 		.body("winner", equalTo(winner))
 		.statusCode(200);
 	}
 	
 	@Test
-	void GivenEverythingIsOk_WhenGameEnds_ThenStatusCode200IsReceived() throws ExceptionResourceNotFound {
-		String winner = new String("Ciccio_Cecchin");
-		given().contentType("application/json").body(winner).pathParam("GID","6489c8c7eb21cc25289e6f2e").when().put("/games/end/{GID}").then().assertThat()
-		.body("winner", equalTo(winner))
+	void GivenWinnerNotPresent_WhenGameEnds_ThenStatusCode500IsReceived() throws ExceptionResourceNotFound, ExceptionIllegalParameters  {
+		String winner = new String("boh");
+		given().contentType("application/json").body(winner).pathParam("GID","6489ddee4456683a05eefa93").when().put("/games/end/{GID}").then().assertThat().statusCode(500);
+	}
+	
+	@Test
+	void GivenGameNotPresent_WhenGameEnds_ThenStatusCode500IsReceived() throws ExceptionResourceNotFound, ExceptionIllegalParameters  {
+		String winner = new String("cane");
+		given().contentType("application/json").body(winner).pathParam("GID","6489ddee4456683a05eefa97").when().put("/games/end/{GID}").then().assertThat().statusCode(500);
+	}
+
+	@Test
+	void GivenEverythingIsOk_WhenTestIsSaved_ThenStatusCode200IsReceived() throws ExceptionResourceNotFound, ExceptionIllegalParameters {
+		String test = new String("Lorem Ipsum");
+		given().contentType("application/json").body(test).when().put("/rounds/{RID}/{PID}","6489ddee4456683a05eefa95","Ciccio_Cecchin").then().assertThat()
+		.body("turn.Ciccio_Cecchin", equalTo(test))
+		.statusCode(200);
+	}
+	
+	@Test
+	void GivenPlayerIsMissing_WhenTestIsSaved_ThenStatusCode500IsReceived() throws ExceptionResourceNotFound, ExceptionIllegalParameters {
+		String test = new String("Lorem Ipsum");
+		given().contentType("application/json").body(test).when().put("/rounds/{RID}/{PID}","6489ddee4456683a05eefa95","Ciccio_Cecchina").then().assertThat().statusCode(500);
+	}
+
+	@Test
+	void GivenRoundNotPresent_WhenTestIsSaved_ThenStatusCode500IsReceived() throws ExceptionResourceNotFound, ExceptionIllegalParameters {
+		String test = new String("Lorem Ipsum");
+		given().contentType("application/json").body(test).when().put("/rounds/{RID}/{PID}","6489ddee4456683a05eefa90","Ciccio_Cecchin").then().assertThat().statusCode(500);
+	}
+
+	@Test
+	void GivenEverythingIsOk_WhenRoundResultIsSaved_ThenStatusCode200IsReceived() throws ExceptionResourceNotFound {
+		String results = new String("Lorem Ipsum");
+		given().contentType("application/json").body(results).when().put("/rounds/result/{RID}","6489ddee4456683a05eefa95").then().assertThat()
+		.body("results", equalTo(results))
 		.statusCode(200);
 	}
 
-
 	@Test
-	void testUpdateTurnTest() {
-		fail("Not yet implemented");
+	void GivenRoundNotPresent_WhenRoundResultIsSaved_ThenStatusCode500IsReceived() throws ExceptionResourceNotFound {
+		String results = new String("Lorem Ipsum");
+		given().contentType("application/json").body(results).when().put("/rounds/result/{RID}","6489ddee4456683a05eefa90").then().assertThat().statusCode(500);
 	}
 
 	@Test
-	void testUpdateRoundResult() {
-		fail("Not yet implemented");
+	void GivenEverythingIsOk_WhenRobotJoins_ThenStatusCode200IsReceived() throws ExceptionResourceNotFound {
+		String test = new String("Lorem Ipsum");
+		given().contentType("application/json").body(test).when().put("/rounds/robot/{RID}","6489ddee4456683a05eefa95").then().assertThat()
+		.body("robotTest", equalTo(test))
+		.statusCode(200);
+	}
+	
+	@Test
+	void GivenRoundNotPresent_WhenRobotJoins_ThenStatusCode500IsReceived() throws ExceptionResourceNotFound {
+		String test = new String("Lorem Ipsum");
+		given().contentType("application/json").body(test).when().put("/rounds/robot/{RID}","6489ddee4456683a05eefa90").then().assertThat().statusCode(500);
 	}
 
-	@Test
-	void testJoinRobot() {
-		fail("Not yet implemented");
-	}
 
 }
