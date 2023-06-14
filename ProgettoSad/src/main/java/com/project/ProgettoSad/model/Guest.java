@@ -1,5 +1,9 @@
 package com.project.ProgettoSad.model;
 
+/**
+*
+* Classe relativa allo studente che partecipa come guest alla partita.
+*/
 public class Guest extends Student {
 	
 	//CONSTRUCTORS

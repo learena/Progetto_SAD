@@ -1,5 +1,11 @@
 package com.project.ProgettoSad.model;
 
+/**
+*
+* Classe che contiene le informazioni relative al robot.
+* @param	robotId	L'identificativo del robot scelto per la partita.
+* @param	difficulty	Stringa che indica la difficolta' del robot.
+*/
 public class Robot {
 	private String robotId;
 	private String difficulty;

@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
-
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.project.ProgettoSad.exception.ExceptionIllegalParameters;
 import com.project.ProgettoSad.exception.ExceptionMandatoryFields;
@@ -32,6 +32,11 @@ import groovy.json.*;
 
 class ControllerTest {
 
+	/**
+	*
+	*Test sul servizio POST ("/games").
+	* Controlla che, all'inserimento di un oggetto Game valido, lo statusCode sia pari a 200 (OK)
+	*/
 	@Test
 	void givenEverythingIsOk_WhenGameIsCreated_Then200StatusCodeIsReceived()throws ExceptionMandatoryFields {
 		
@@ -47,6 +52,12 @@ class ControllerTest {
 		given().contentType("application/json").body(game).when().post("/games").then().assertThat().statusCode(200);
 	}
 	
+	
+	/**
+	*
+	*Test sul servizio POST ("/games").
+	* Controlla che, all'inserimento di un oggetto Game che non contiene l'host, lo statusCode sia pari a 500 (Internal Server Error)
+	*/
 	@Test
 	void givenHostIsNotInserted_WhenGameIsCreated_Then500CodeIsReceived()throws ExceptionMandatoryFields {
 		
@@ -63,6 +74,11 @@ class ControllerTest {
 		given().contentType("application/json").body(game).when().post("/games").then().assertThat().statusCode(500);
 	}
 	
+	/**
+	*
+	*Test sul servizio POST ("/games").
+	* Controlla che, all'inserimento di un oggetto Game che non contiene la classe da testare, lo statusCode sia pari a 500 (Internal Server Error)
+	*/
 	@Test
 	void givenClassUTIsNotInserted_WhenGameIsCreated_Then500CodeIsReceived()throws ExceptionMandatoryFields {
 	
@@ -77,6 +93,13 @@ class ControllerTest {
 		given().contentType("application/json").body(game).when().post("/games").then().assertThat().statusCode(500);
 	}
 	
+	
+	
+	/**
+	*
+	*Test sul servizio POST ("/games").
+	* Controlla che, all'inserimento di un oggetto Game che non contiene il robot, lo statusCode sia pari a 500 (Internal Server Error)
+	*/
 	@Test
 	void givenRobotIsNotInserted_WhenGameIsCreated_Then500CodeIsReceived()throws ExceptionMandatoryFields {
 		
@@ -91,6 +114,14 @@ class ControllerTest {
 		given().contentType("application/json").body(game).when().post("/games").then().assertThat().statusCode(500);
 	}
 	
+	
+	
+	/**
+	*
+	*Test sul servizio POST ("/games").
+	* Controlla che, all'inserimento di un oggetto Game in cui lo scenario è diverso
+	* dai valori prestabiliti (1, 2 o 3), lo statusCode sia pari a 400 (Bad Request)
+	*/
 	@Test
 	void givenScenarioOutOfBoundary_WhenGameIsCreated_Then400StatusCodeIsReceived()throws ExceptionIllegalParameters {
 		
@@ -106,6 +137,13 @@ class ControllerTest {
 		given().contentType("application/json").body(game).when().post("/games").then().assertThat().statusCode(400);
 	}
 
+	
+	/**
+	*
+	*Test sul servizio POST ("/games").
+	* Controlla che, all'inserimento di un oggetto Game in cui il numero di round totali 
+	* è negativo, lo statusCode sia pari a 400 (Bad Reaquest)
+	*/
 	@Test
 	void givenNegativeTotalRoundNumber_WhenGameIsCreated_Then400StatusCodeIsReceived()throws ExceptionIllegalParameters {
 		
@@ -121,6 +159,12 @@ class ControllerTest {
 		given().contentType("application/json").body(game).when().post("/games").then().assertThat().statusCode(400);
 	}
 	
+	/**
+	*
+	*Test sul servizio POST ("/games").
+	* Controlla che, all'inserimento di un oggetto Game in cui sono presenti guest anche se lo scenario 
+	* è diverso da 3, lo statusCode sia pari a 500 (Internal Server Error)
+	*/
 	@Test
 	void givenIllegalGuests_WhenGameIsCreated_Then500StatusCodeIsReceived()throws ExceptionMandatoryFields,ExceptionIllegalParameters {
 		
@@ -140,6 +184,13 @@ class ControllerTest {
 		given().contentType("application/json").body(game).when().post("/games").then().assertThat().statusCode(500);
 	}
 	
+	
+	/**
+	*
+	*Test sul servizio POST ("/games").
+	* Controlla che, all'inserimento di un oggetto Game in cui si ha più di un round
+	* anche se lo scenario è 1, lo statusCode sia pari a 500 (Internal Server Error)
+	*/
 	@Test
 	void givenIncorrectTotalRoundNumber_WhenGameIsCreated_Then500StatusCodeIsReceived()throws ExceptionIllegalParameters {
 		
@@ -155,6 +206,12 @@ class ControllerTest {
 		given().contentType("application/json").body(game).when().post("/games").then().assertThat().statusCode(500);
 	}
 	
+	/**
+	*
+	*Test sul servizio GET ("/games/{GID}").
+	* Controlla che, all'inserimento di un Id partita valido, le informazioni ritornate siano 
+	* corrette e corrispondenti alla partita contrassegnata dall'Id indicato, e che lo statusCode sia pari a 200 (OK)
+	*/
 	@Test
 	void GivenEverythingIsOk_WhenGameIsRequested_Then200StatusCodeIsReceived() throws ExceptionResourceNotFound {
 		given().pathParam("GID","6488d08bff95c849a16d1f96").when().get("/games/{GID}").then()
@@ -168,31 +225,61 @@ class ControllerTest {
 		.statusCode(200);
 	}
 
+	/**
+	*
+	*Test sul servizio GET ("/games/{GID}").
+	* Controlla che, all'inserimento di un Id partita non valido, lo statusCode sia pari a 500 (Internal Server Error)
+	*/
 	@Test
 	void GivenGameIsNotPresent_WhenGameIsRequested_Then500StatusCodeIsReceived() throws ExceptionResourceNotFound {
 		given().pathParam("GID","123456789012345678901234").when().get("/games/{GID}").then().assertThat().statusCode(500);
 	}
-
+	/**
+	*
+	*Test sul servizio GET ("/rounds/{RID}").
+	* Controlla che, all'inserimento di un Id round valido, lo statusCode sia pari a 200 (OK)
+	*/
 	@Test
 	void GivenEverythingIsOk_WhenRoundIsRequested_Then200StatusCodeIsReceived() throws ExceptionResourceNotFound {
 		given().pathParam("RID","6488d08bff95c849a16d1f97").when().get("/rounds/{RID}").then().assertThat().statusCode(200);
 	}
 	
+	/**
+	*
+	*Test sul servizio GET ("/rounds/{RID}").
+	* Controlla che, all'inserimento di un Id round non valido, lo statusCode sia pari a 500 (Internal Server Error)
+	*/
 	@Test
 	void GivenRoundIsNotPresent_WhenRoundIsRequested_Then500StatusCodeIsReceived() throws ExceptionResourceNotFound {
 		given().pathParam("RID","123456789012345678901234").when().get("/rounds/{RID}").then().assertThat().statusCode(500);
 	}
 	
+	/**
+	*
+	*Test sul servizio GET ("/rounds/find/{GID}").
+	* Controlla che, all'inserimento di un Id partita valido, lo statusCode sia pari a 200(OK)
+	*/
 	@Test
 	void GivenEverythingIsOk_WhenRoundByGameIsRequested_Then200StatusCodeIsReceived() throws ExceptionResourceNotFound {
 		given().pathParam("GID","6488d08bff95c849a16d1f96").when().get("/rounds/find/{GID}").then().assertThat().statusCode(200);
 	}
 	
+	/**
+	*
+	*Test sul servizio GET ("/rounds/find/{GID}").
+	* Controlla che, all'inserimento di un Id partita non valido, lo statusCode sia pari a 500 (Internal Server Error)
+	*/
 	@Test
 	void GivenRoundIsNotPresent_WhenRoundByGameIsRequested_Then500StatusCodeIsReceived() throws ExceptionResourceNotFound {
 		given().pathParam("GID","123456789012345678901234").when().get("/rounds/find/{GID}").then().assertThat().statusCode(500);
 	}
 
+	/**
+	*
+	*Test sul servizio GET ("/games/rounds/{GID}").
+	* Controlla che, all'inserimento di un Id partita valido, le informazioni ritornate siano 
+	* corrette e corrispondenti alla partita contrassegnata dall'Id indicato ed ai suoi round, e che lo statusCode sia pari a 200 (OK)
+	*/
 	@Test
 	void GivenEverythingIsOk_WhenGameWithRoundsIsRequested_Then200StatusCodeIsReceived() throws ExceptionResourceNotFound {
 		given().pathParam("GID","6489c8c7eb21cc25289e6f2e").when().get("/games/rounds/{GID}").then()
@@ -205,21 +292,52 @@ class ControllerTest {
 		.statusCode(200);
 	}
 	
+	/**
+	*
+	*Test sul servizio GET ("/games/rounds/{GID}").
+	* Controlla che, all'inserimento di un Id partita non valido, lo statusCode sia pari a 500 (Internal Server Error)
+	*/
 	@Test
-	void GivenRoundIsNotPresent_WhenGameWithRoundsIsRequested_Then500StatusCodeIsReceived() throws ExceptionResourceNotFound {
+	void GivenGameIsNotPresent_WhenGameWithRoundsIsRequested_Then500StatusCodeIsReceived() throws ExceptionResourceNotFound {
 		given().pathParam("GID","123456789012345678901234").when().get("/games/rounds/{GID}").then().assertThat().statusCode(500);
 	}
 	
+	/**
+	*
+	*Test sul servizio GET ("/rounds/{GID}/{roundNumber}").
+	* Controlla che, all'inserimento di un Id partita e di un numero di round validi, lo statusCode sia pari a 200 (OK)
+	*/
 	@Test
 	void GivenEverythingIsOk_WhenRoundByNumberIsRequested_Then200StatusCodeIsReceived() throws ExceptionResourceNotFound {
 		given().get("/rounds/{GID}/{roundNumber}","6489c8c7eb21cc25289e6f2e",1).then().assertThat().statusCode(200);
 	}
 	
+	/**
+	*
+	*Test sul servizio GET ("/rounds/{GID}/{roundNumber}").
+	* Controlla che, all'inserimento di un Id partita non valido, lo statusCode sia pari a 500 (Internal Server Error)
+	*/
 	@Test
-	void GivenRoundIsNotPresent_WhenRoundByNumberIsRequested_Then500StatusCodeIsReceived() throws ExceptionResourceNotFound {
+	void GivenGameIsNotPresent_WhenRoundByNumberIsRequested_Then500StatusCodeIsReceived() throws ExceptionResourceNotFound {
 		given().pathParam("GID","123456789012345678901234").pathParam("roundNumber", 1).when().get("/rounds/{GID}/{roundNumber}").then().assertThat().statusCode(500);
 	}
 
+	/**
+	*
+	*Test sul servizio GET ("/rounds/{GID}/{roundNumber}").
+	* Controlla che, all'inserimento di un numero di round non esistente, lo statusCode sia pari a 500 (Internal Server Error)
+	*/
+	@Test
+	void GivenRoundNumberIsNotPresent_WhenRoundByNumberIsRequested_Then500StatusCodeIsReceived() throws ExceptionResourceNotFound {
+		given().pathParam("GID","6489c8c7eb21cc25289e6f2e").pathParam("roundNumber", 10).when().get("/rounds/{GID}/{roundNumber}").then().assertThat().statusCode(500);
+	}
+
+	/**
+	*
+	*Test sul servizio GET ("/games/player/{PID}").
+	* Controlla che, all'inserimento di un Id studente valido, le informazioni ritornate siano 
+	* corrette, e che lo statusCode sia pari a 200 (OK)
+	*/
 	@Test
 	void GivenEverythingIsOk_WhenPlayerHistoryIsRequested_ThenStatusCode200IsReceived() throws ExceptionResourceNotFound {
 		given().pathParam("PID","Ciccio_Cecchin").when().get("/games/player/{PID}").then().assertThat()
@@ -227,11 +345,25 @@ class ControllerTest {
 		.statusCode(200);
 	}
 	
+	
+	/**
+	*
+	*Test sul servizio GET ("/games/player/{PID}").
+	* Controlla che, all'inserimento di un Id studente non valido, lo statusCode sia pari a 500 (Internal Server Error)
+	*/
 	@Test
 	void GivenPlayerDoesNotExist_WhenPlayerHistoryIsRequested_ThenStatusCode500IsReceived() throws ExceptionResourceNotFound {
 		given().pathParam("PID","Ciccio_Cecchini").when().get("/games/player/{PID}").then().assertThat().statusCode(500);
 	}
 
+	
+	
+	/**
+	*
+	*Test sul servizio PUT ("/games/end/{GID}").
+	* Controlla che, all'inserimento di un Id studente valido come vincitore e di un Id
+	* partita valido, le informazioni ritornate siano corrette, e che lo statusCode sia pari a 200 (OK)
+	*/
 	@Test
 	void GivenEverythingIsOk_WhenGameEnds_ThenStatusCode200IsReceived() throws ExceptionResourceNotFound, ExceptionIllegalParameters {
 		String winner = new String("cane");
@@ -240,18 +372,37 @@ class ControllerTest {
 		.statusCode(200);
 	}
 	
+	/**
+	*
+	*Test sul servizio PUT ("/games/end/{GID}").
+	* Controlla che, all'inserimento di un Id studente non valido come vincitore, lo statusCode sia pari a 500 (Internal Server Error)
+	*/
 	@Test
 	void GivenWinnerNotPresent_WhenGameEnds_ThenStatusCode500IsReceived() throws ExceptionResourceNotFound, ExceptionIllegalParameters  {
 		String winner = new String("boh");
 		given().contentType("application/json").body(winner).pathParam("GID","6489ddee4456683a05eefa93").when().put("/games/end/{GID}").then().assertThat().statusCode(500);
 	}
 	
+	
+	/**
+	*
+	*Test sul servizio PUT ("/games/end/{GID}").
+	* Controlla che, all'inserimento di un Id partita non valido, 
+	* lo statusCode sia pari a 500 (Internal Server Error)
+	*/
 	@Test
 	void GivenGameNotPresent_WhenGameEnds_ThenStatusCode500IsReceived() throws ExceptionResourceNotFound, ExceptionIllegalParameters  {
 		String winner = new String("cane");
 		given().contentType("application/json").body(winner).pathParam("GID","6489ddee4456683a05eefa97").when().put("/games/end/{GID}").then().assertThat().statusCode(500);
 	}
 
+	
+	/**
+	*
+	*Test sul servizio PUT ("/rounds/{RID}/{PID}").
+	* Controlla che, all'inserimento di un Id studente e di un Id round validi,  
+	* le informazioni ritornate siano corrette, e che lo statusCode sia pari a 200 (OK)
+	*/
 	@Test
 	void GivenEverythingIsOk_WhenTestIsSaved_ThenStatusCode200IsReceived() throws ExceptionResourceNotFound, ExceptionIllegalParameters {
 		String test = new String("Lorem Ipsum");
@@ -260,18 +411,39 @@ class ControllerTest {
 		.statusCode(200);
 	}
 	
+	
+	/**
+	*
+	*Test sul servizio PUT ("/rounds/{RID}/{PID}").
+	* Controlla che, all'inserimento di un Id studente non valido, 
+	* lo statusCode sia pari a 500 (Internal Server Error)
+	*/
 	@Test
 	void GivenPlayerIsMissing_WhenTestIsSaved_ThenStatusCode500IsReceived() throws ExceptionResourceNotFound, ExceptionIllegalParameters {
 		String test = new String("Lorem Ipsum");
 		given().contentType("application/json").body(test).when().put("/rounds/{RID}/{PID}","6489ddee4456683a05eefa95","Ciccio_Cecchina").then().assertThat().statusCode(500);
 	}
 
+	
+	/**
+	*
+	*Test sul servizio PUT ("/rounds/{RID}/{PID}").
+	* Controlla che, all'inserimento di un Id round non valido, 
+	* lo statusCode sia pari a 500 (Internal Server Error)
+	*/
 	@Test
 	void GivenRoundNotPresent_WhenTestIsSaved_ThenStatusCode500IsReceived() throws ExceptionResourceNotFound, ExceptionIllegalParameters {
 		String test = new String("Lorem Ipsum");
 		given().contentType("application/json").body(test).when().put("/rounds/{RID}/{PID}","6489ddee4456683a05eefa90","Ciccio_Cecchin").then().assertThat().statusCode(500);
 	}
 
+	
+	/**
+	*
+	*Test sul servizio PUT ("/rounds/result/{RID}").
+	* Controlla che, all'inserimento di un Id round valido,  
+	* le informazioni ritornate siano corrette, e che lo statusCode sia pari a 200 (OK)
+	*/
 	@Test
 	void GivenEverythingIsOk_WhenRoundResultIsSaved_ThenStatusCode200IsReceived() throws ExceptionResourceNotFound {
 		String results = new String("Lorem Ipsum");
@@ -280,12 +452,25 @@ class ControllerTest {
 		.statusCode(200);
 	}
 
+	
+	/**
+	*
+	*Test sul servizio PUT ("/rounds/result/{RID}").
+	* Controlla che, all'inserimento di un Id round non valido, lo statusCode sia pari a 500 (Internal Server Error)
+	*/
 	@Test
 	void GivenRoundNotPresent_WhenRoundResultIsSaved_ThenStatusCode500IsReceived() throws ExceptionResourceNotFound {
 		String results = new String("Lorem Ipsum");
 		given().contentType("application/json").body(results).when().put("/rounds/result/{RID}","6489ddee4456683a05eefa90").then().assertThat().statusCode(500);
 	}
 
+	
+	/**
+	*
+	*Test sul servizio PUT ("/rounds/robot/{RID}").
+	* Controlla che, all'inserimento di un Id round valido,  
+	* le informazioni ritornate siano corrette, e che lo statusCode sia pari a 200 (OK)
+	*/
 	@Test
 	void GivenEverythingIsOk_WhenRobotJoins_ThenStatusCode200IsReceived() throws ExceptionResourceNotFound {
 		String test = new String("Lorem Ipsum");
@@ -294,6 +479,12 @@ class ControllerTest {
 		.statusCode(200);
 	}
 	
+	
+	/**
+	*
+	*Test sul servizio PUT ("/rounds/robot/{RID}").
+	* Controlla che, all'inserimento di un Id round non valido, lo statusCode sia pari a 500 (Internal Server Error)
+	*/
 	@Test
 	void GivenRoundNotPresent_WhenRobotJoins_ThenStatusCode500IsReceived() throws ExceptionResourceNotFound {
 		String test = new String("Lorem Ipsum");

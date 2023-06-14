@@ -1,6 +1,7 @@
 package com.project.ProgettoSad.model;
 
 import java.time.LocalDateTime;
+
 import java.util.List;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -15,6 +16,21 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
 import org.bson.types.ObjectId;
+
+/**
+*
+* Classe che contiene le infromazioni relative alla partita.
+* @param	_id	L'ObjectId della partita.
+* @param	 startDate	La data formato "yyyy-MM-dd HH:mm:ss" di inizio della partita.
+* @param	 endDate	La data formato "yyyy-MM-dd HH:mm:ss" di fine della partita.
+* @param	host	Lo studente che inzia la partita.
+* @param	guest	La lista degli studenti che partecipano alla partita.
+* @param	robot	Il robot che partecipa alla partita.
+* @param	scenario	Lo scenario di gioco della partita (puo' essere 1, 2 o 3).
+* @param	totalRoundNumber	Il numero totale di round da giocare nella partita.
+* @param	classUt	La classe under test scelta.
+* @param	winner	La stringa che indica il vincitore della partita.
+*/
 
 @Document (collection = "GameDB")
 public class Game{

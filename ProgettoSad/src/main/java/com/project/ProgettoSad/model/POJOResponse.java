@@ -1,6 +1,10 @@
 package com.project.ProgettoSad.model;
 
 import java.util.List;
+/**
+*
+* Classe utility per l'implementazione di readGame
+*/
 
 public class POJOResponse {
 

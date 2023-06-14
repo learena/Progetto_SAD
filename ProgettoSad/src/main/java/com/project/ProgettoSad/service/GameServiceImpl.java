@@ -36,7 +36,20 @@ public class GameServiceImpl implements GameService {
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	
-	public void check(Game game) throws ExceptionMandatoryFields, ExceptionIllegalParameters {
+	/**
+	*
+	* Funzione di utility per controllare che i parametri che l'utente 
+	* inserisce nella funzione createGame siano corretti e completi.
+	* 
+	* @param	game	Contiene le informazioni inserite dall'utente come oggetto Game.
+	* @throws	ExceptionMandatoryFields	Nel caso in cui non siano stati inseriti l'host, la classe sotto test, o il robot.
+	* @throws	ExceptionIllegalParameters	Nel caso in cui siano stati inseriti dei guest e la partita non sia del terzo scenario
+	* oppure il numero di round </td><td> &#232; </td></tr> diverso da 1 e la partita </td><td> &#232; </td></tr> del primo scenario.
+	*
+	*
+	*/
+	
+	private void check(Game game) throws ExceptionMandatoryFields, ExceptionIllegalParameters {
 		if(game.getHost() == null || game.getClassUt() == null || game.getRobot() == null) {
 			throw new ExceptionMandatoryFields("Host, Robot and ClassUT are mandatory!");
 		}
@@ -49,8 +62,19 @@ public class GameServiceImpl implements GameService {
 		}
 	}
 	
-	public void checkWinner(String winner, Game game) throws ExceptionIllegalParameters{
-		Guest tmp = new Guest(winner);
+	
+	/**
+	*
+	* Funzione di utility per controllare che i parametri che l'utente 
+	* inserisce nella funzione endGame siano corretti e completi.
+	* 
+	* @param	game	Contiene le informazioni inserite dall'utente come oggetto Game.
+	* @param	winner	La stringa che indica il vincitore.
+	* @throws	ExceptionIllegalParameters	Nel caso in cui il vincitore non corrisponda n</td><td> &#233; </td></tr>
+	*	all'host n</td><td> &#233; </td></tr> ai guest (caso terzo scenario) n</td><td> &#233; </td></tr> al robot 
+	*/
+	
+	private void checkWinner(String winner, Game game) throws ExceptionIllegalParameters{
 		if(game.getScenario() != 3) {
 			if(!game.getHost().getStudentId().equals(winner) && !game.getRobot().getRobotId().equals(winner)) {
 				throw new ExceptionIllegalParameters("Winner hasn't played the game!");
@@ -72,6 +96,22 @@ public class GameServiceImpl implements GameService {
 			}
 		}
 	}
+	
+	
+	/**
+	*
+	* Funzione che controlla se i parametri inseriti dall'utente sono corretti, li salva in un nuovo 
+	* documento corrispondente alla partita, crea i documenti dei round a questa associati, e crea, se queste 
+	* non sono gia' presenti, le directory relative ai giocatori nel file system.
+	* 
+	* @param	game	Contiene le informazioni inserite dall'utente come oggetto Game.
+	* @return	id		La stringa contenente l'ObjectId del documento game appena creato.
+	* @throws	ExceptionMandatoryFields	Nel caso in cui non siano stati inseriti l'host, la classe sotto test, o il robot.
+	* @throws	ExceptionIllegalParameters	Nel caso in cui siano stati inseriti dei guest e la partita non sia del terzo scenario
+	* oppure il numero di round </td><td> &#232; </td></tr> diverso da 1 e la partita </td><td> &#232; </td></tr> del primo scenario.
+	*
+	*
+	*/
 	
 	@Override
 	public String createGame(Game game) throws ExceptionIllegalParameters, ExceptionMandatoryFields {
@@ -135,6 +175,21 @@ public class GameServiceImpl implements GameService {
 		return GameDB.getId().toString();		
 	}
 	
+	/**
+	*
+	* Funzione che permette di inserire nella repository il vincitore della partita, controllando che questo sia
+	* corretto. Inoltre crea un file .csv nella directory di tutti i giocatori contenente tutte le informazioni
+	* della partita appena finita.
+	* 
+	* @param	GID		L'ObjectId relativo alla partita.
+	* @param	winner	La stringa che indica il vincitore.
+	* @return	gameUpdate	L'oggetto Game relativo alla partita.
+	* @throws	ExceptionIllegalParameters	Nel caso in cui il vincitore non corrisponda ne'
+	*	all'host ne' ai guest (caso terzo scenario) ne' al robot .
+	*
+	*
+	*/
+	
 	@Override
 	public Game endGame(ObjectId GID,String winner) throws IOException,ExceptionIllegalParameters {
 		Optional <Game> GameDB = this.gameRepository.findById(GID);
@@ -148,7 +203,6 @@ public class GameServiceImpl implements GameService {
 			
 			Path path = Paths.get("C:\\Users\\Public\\AUTName\\" + gameUpdate.getHost() + "\\" + gameUpdate.getId().toString()+"\\Game.csv");
 			File file = new File(path.toString());
-			//file.mkdirs();
 			
 			try {
 				FileWriter writer = new FileWriter(file);
@@ -191,10 +245,24 @@ public class GameServiceImpl implements GameService {
 		}
 	}
 
+	
+	/**
+	*
+	* Funzione che ritorna gli oggetti relativi a tutte le partite presenti nel repository.
+	* @return	List<Game>	La lista di tutti gli oggetti Game relativi alle partite.
+	*/
+	
 	@Override
 	public List<Game> getAllGames(){
 		return this.gameRepository.findAll();
 	}
+	
+	/**
+	*
+	* Funzione che ritorna gli oggetti relativi a tutte le partite giocate da un determinato studente.
+	* @param	PID	La stringa che indica l'Id dello studente di cui si vuole conoscere lo storico
+	* @return	List<Game>	La lista di tutti gli oggetti Game relativi alle partite giocate dallo studente.
+	*/
 	
 	@Override
 	public List<Game> readPlayerHistory(String PID) {
@@ -208,7 +276,14 @@ public class GameServiceImpl implements GameService {
 		return playerHistory;
 	}
 
-	
+	/**
+	*
+	* Funzione che ritorna l'oggetto Game contrassegnato da un determinato id, se questo </td><td> &#232; </td></tr> presente nel repository.
+	* @param	GID	L'ObjectId relativo alla partita di cui si vogliono conoscere le informazioni.
+	* @return	game	L'oggetto Game richiesto.
+	* @throws	ExceptionResourceNotFound	Nel caso in cui non esista nel repository una partita contrassegnata dall'Id indicato.
+	*/
+		
 	@Override
 	public Game getGameById (ObjectId GID) {
 		Optional <Game> GameDB = this.gameRepository.findById(GID);

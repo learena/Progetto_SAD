@@ -9,6 +9,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
+/**
+*
+* Classe che contiene le infromazioni relative al round.
+* @param	roundId	L'ObjectId del round.
+* @param	 gameId	L'ObjectId della partita a cui il round appartiene
+* @param	roundNumber	Il numero dell'attuale round da giocare.
+* @param	turn	HashMap contenente l'associazione tra i giocatori del round e le classi di test che questi hanno scritto.
+* @param	results	La stringa che indica i risultati del round.
+*/
 @Document (collection = "RoundDB")
 public class Round {
 	@Id

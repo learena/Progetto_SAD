@@ -1,7 +1,11 @@
 package com.project.ProgettoSad.model;
 
 import jakarta.validation.constraints.NotNull;
-
+/**
+*
+* Classe relativa allo studente.
+* @param	studentId	Identificativo dello studente
+*/
 public class Student {
 	@NotNull
 	private String studentId;
