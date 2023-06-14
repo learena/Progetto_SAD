@@ -25,7 +25,12 @@ import com.project.ProgettoSad.service.RoundService;
 import jakarta.validation.Valid;
 
 
-
+/**
+*
+* Controller 
+* Gestisce le API REST
+*
+*/
 @RestController
 public class GameController {
 	

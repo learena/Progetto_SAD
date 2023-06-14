@@ -9,6 +9,11 @@ import com.project.ProgettoSad.exception.ExceptionIllegalParameters;
 import com.project.ProgettoSad.exception.ExceptionMandatoryFields;
 import com.project.ProgettoSad.model.Game;
 
+
+/**
+*Interfaccia publica per i metodi di GameService
+*
+*/
 public interface GameService {
 	
 	String createGame(Game game) throws ExceptionIllegalParameters, ExceptionMandatoryFields;

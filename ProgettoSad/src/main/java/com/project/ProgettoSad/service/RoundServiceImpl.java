@@ -24,7 +24,10 @@ import com.project.ProgettoSad.exception.ExceptionResourceNotFound;
 import com.project.ProgettoSad.repository.GameRepository;
 import com.project.ProgettoSad.repository.RoundRepository;
 
-
+/**
+*Implementazione dell'interfaccia RoundService
+*
+*/
 @Service
 @Transactional
 public class RoundServiceImpl implements RoundService {

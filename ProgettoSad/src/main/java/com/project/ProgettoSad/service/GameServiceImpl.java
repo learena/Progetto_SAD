@@ -24,7 +24,10 @@ import com.project.ProgettoSad.exception.ExceptionResourceNotFound;
 import com.project.ProgettoSad.repository.GameRepository;
 import com.project.ProgettoSad.repository.RoundRepository;
 
-
+/**
+*Implementazione dell'interfaccia GameService
+*
+*/
 @Service
 @Transactional
 public class GameServiceImpl implements GameService {
