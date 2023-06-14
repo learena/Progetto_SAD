@@ -37,8 +37,8 @@ public class GameServiceImpl implements GameService {
 	private MongoTemplate mongoTemplate;
 	
 	public void check(Game game) throws ExceptionMandatoryFields, ExceptionIllegalParameters {
-		if(game.getHost() == null || game.getClassUt() == null) {
-			throw new ExceptionMandatoryFields("Host and ClassUT are mandatory!");
+		if(game.getHost() == null || game.getClassUt() == null || game.getRobot() == null) {
+			throw new ExceptionMandatoryFields("Host, Robot and ClassUT are mandatory!");
 		}
 		
 		if(game.getScenario() != 3 && game.getGuest() != null) {
@@ -46,6 +46,30 @@ public class GameServiceImpl implements GameService {
 		}
 		else if((game.getScenario() == 1 && game.getTotalRoundNumber() != 1)) {
 			throw new ExceptionIllegalParameters("First Scenario cannot have more than one round!");
+		}
+	}
+	
+	public void checkWinner(String winner, Game game) throws ExceptionIllegalParameters{
+		Guest tmp = new Guest(winner);
+		if(game.getScenario() != 3) {
+			if(!game.getHost().getStudentId().equals(winner) && !game.getRobot().getRobotId().equals(winner)) {
+				throw new ExceptionIllegalParameters("Winner hasn't played the game!");
+			}
+		}
+		else {
+			if(!game.getHost().getStudentId().equals(winner) && !game.getRobot().getRobotId().equals(winner)) {
+				Boolean found = false;
+				int i = 0;
+				while(found.equals(false) && i < game.getGuest().size()) {
+					if(game.getGuest().get(i).getStudentId().equals(winner)) {
+						found = true;
+					}
+					i++;
+				}
+				if(found.equals(false)) {
+					throw new ExceptionIllegalParameters("Winner hasn't played the game!");
+				}
+			}
 		}
 	}
 	
@@ -112,11 +136,12 @@ public class GameServiceImpl implements GameService {
 	}
 	
 	@Override
-	public Game endGame(ObjectId GID,String winner) throws IOException {
+	public Game endGame(ObjectId GID,String winner) throws IOException,ExceptionIllegalParameters {
 		Optional <Game> GameDB = this.gameRepository.findById(GID);
 		if(GameDB.isPresent()) {
 			Game gameUpdate = GameDB.get();
 			gameUpdate.setId(GID);
+			checkWinner(winner,gameUpdate);
 			gameUpdate.setWinner(winner);
 			gameUpdate.setEndDate(LocalDateTime.now());
 			this.gameRepository.save(gameUpdate);

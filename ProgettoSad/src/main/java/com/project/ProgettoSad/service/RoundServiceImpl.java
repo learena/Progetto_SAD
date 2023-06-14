@@ -178,7 +178,7 @@ public class RoundServiceImpl implements RoundService {
 		Criteria criteria = new Criteria();
 		criteria.andOperator(Criteria.where("gameId").is(GID),Criteria.where("roundNumber").is(roundNumber));
 		Query query = new Query(criteria);
-		Round round = (Round) this.mongoTemplate.find(query, Round.class);
+		Round round = this.mongoTemplate.findOne(query, Round.class);
 		if(round.getRoundId()== null) {
 			throw new ExceptionResourceNotFound("No Round document exists for the Game with id: " + GID + "and with round number: " + roundNumber);
 		}

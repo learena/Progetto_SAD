@@ -85,7 +85,7 @@ public class GameController {
 	}
 	
 	@PutMapping("/games/end/{GID}")
-	public ResponseEntity <Game> endGame(@PathVariable ObjectId GID, @RequestBody String winner) throws IOException{
+	public ResponseEntity <Game> endGame(@PathVariable ObjectId GID, @RequestBody String winner) throws IOException, ExceptionIllegalParameters{
 		return ResponseEntity.ok().body(this.gameService.endGame(GID,winner));
 	}
 	
